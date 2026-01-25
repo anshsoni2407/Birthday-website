@@ -17,7 +17,7 @@ const ForManisha = () => {
 
   /* COUNTDOWN */
   useEffect(() => {
-    const target = new Date("2026-01-25T23:45:00").getTime();
+    const target = new Date("2026-01-25T23:49:00").getTime();
     let blasted = false;
 
     const timer = setInterval(() => {
