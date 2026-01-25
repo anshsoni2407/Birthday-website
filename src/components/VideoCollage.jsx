@@ -1,5 +1,4 @@
 import React from "react";
-import collage from "../../assets/collage.mp4";
 
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +17,7 @@ const VideoCollage = () => {
       <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.4)] backdrop-blur-md bg-black/30 border border-white/20 p-6">
         {/* 🎥 Video */}
         <video
-          src={collage}
+          src= '/collage.mp4'
           autoPlay
           loop
           muted
