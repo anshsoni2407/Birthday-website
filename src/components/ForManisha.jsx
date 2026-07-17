@@ -3,6 +3,7 @@ import ImageSlider from "../components/common/ImageSlider";
 import musicFile from "../assets/music.mp3";
 import Page2Slider from "../components/common/Page2Slider";
 import CurtainIntro from "./CurtainIntro";
+import bgPhone from '../assets/Anuj/bgPhone.png'
 
 const ForManisha = () => {
   const effectsRef = useRef(null);
@@ -82,7 +83,7 @@ const ForManisha = () => {
   }, [curtainOpen]);
 
   const blast = () => {
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < 300; i++) {
       const c = document.createElement("div");
       c.className = "confetti";
       c.style.left = Math.random() * 100 + "%";
@@ -107,21 +108,23 @@ const ForManisha = () => {
   };
 
   return (
-    <div className="min-h-screen py-3 bg-gradient-to-br from-pink-300 to-purple-400 text-white overflow-x-hidden relative">
+    <div
+      className="min-h-screen py-3 text-white overflow-x-hidden relative bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url(${bgPhone})`,
+      }}
+    >
+      {" "}
       {!curtainOpen && <CurtainIntro onOpen={() => setCurtainOpen(true)} />}
-
       <style>{`
         .heart { position:absolute; bottom:-30px; font-size:30px; animation: floatUp linear forwards; }
         .confetti { position:absolute; top:-10px; width:8px; height:14px; animation: fall linear forwards; }
         @keyframes floatUp { to { transform: translateY(-110vh) scale(1.5); opacity: 0; } }
         @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
       `}</style>
-
-      <div ref={effectsRef} className="fixed inset-0 pointer-events-none z-0" />
-
+      <div ref={effectsRef} className="fixed inset-0 pointer-events-none z-50" />
       {/* 🎵 audio */}
       <audio ref={musicRef} src={musicFile} loop />
-
       {/* 🎵 music button */}
       <button
         onClick={toggleMusic}
@@ -131,7 +134,6 @@ const ForManisha = () => {
       >
         {playing ? "⏸️" : "🎵"}
       </button>
-
       {page === 1 && (
         <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center z-10">
           <ImageSlider />
@@ -163,7 +165,6 @@ const ForManisha = () => {
           )}
         </div>
       )}
-
       {page === 2 && (
         <div className="min-h-screen flex items-center justify-center px-4 z-10">
           <Page2Slider showStory={showStory} />

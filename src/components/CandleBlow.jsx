@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import gif from '../assets/Anuj/gif.mp4'
 const CandleBlow = () => {
   const [stage, setStage] = useState("before"); // before | blowing | after
   const [listening, setListening] = useState(false);
-
+  const [showBlowGif, setShowBlowGif] = useState(false);
+  const blownRef = useRef(false);
+  // Timestamp when GIF became visible, used to enforce minimum 2‑second display
+  const gifShownAtRef = useRef(null); // stores timestamp when GIF becomes visible
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const dataArrayRef = useRef(null);
@@ -51,11 +54,38 @@ const CandleBlow = () => {
       dataArrayRef.current.reduce((a, b) => a + b, 0) /
       dataArrayRef.current.length;
 
-    if (volume > 40) {
-      blowCandle();
-      return;
+    // Volume >= 90 -> blow candle immediately
+    if (volume > 90) {
+      if (!blownRef.current) {
+        blownRef.current = true;
+        blowCandle();
+      }
+      // Ensure GIF is hidden when blowing
+      setShowBlowGif(false);
+      return; // stop further monitoring (blowCandle already cancels animation)
     }
 
+    // Volume between 20 and 90 -> show GIF
+    if (volume >= 20 && volume <= 90) {
+      if (!showBlowGif) {
+        // first time entering GIF range; record start time
+        gifShownAtRef.current = Date.now();
+        setShowBlowGif(true);
+      }
+      // stay visible; no need to update timestamp while already shown
+    } else {
+      // Volume < 20 -> hide GIF only after it has been visible for >=2 seconds
+      if (showBlowGif && gifShownAtRef.current) {
+        const elapsed = Date.now() - gifShownAtRef.current;
+        if (elapsed >= 2000) {
+          setShowBlowGif(false);
+          gifShownAtRef.current = null;
+        }
+        // else keep GIF visible until minimum time passes
+      }
+    }
+
+    // Continue monitoring via animation frame (unless blown)
     animationRef.current = requestAnimationFrame(detectBlow);
   };
 
@@ -90,7 +120,7 @@ const CandleBlow = () => {
           <img
             src="/bg/ChatGPT_Image_Jan_17__2026__02_33_21_AM-removebg-preview.png"
             alt="Cake with candle"
-            className="w-72 md:w-80 animate-fadeIn"
+            className="w-72 md:w-80 animate-fadeIn relative"
           />
 
           <button
@@ -100,11 +130,22 @@ const CandleBlow = () => {
             {listening ? "Blow the Candle 💨" : "Start Mic 🎤"}
           </button>
 
-          {listening && (
-            <p className="mt-4 text-lg animate-bounce">Blow into the mic 🎂</p>
-          )}
-        </>
+            {/* Instruction text – only when listening and GIF not visible */}
+            {listening && !showBlowGif && (
+              <p className="mt-4 text-lg animate-bounce">Blow into the mic 🎂</p>
+            )}
+            {/* Fixed‑size container for GIF to prevent layout shifts */}
+            <div className="mt-4 w-48 h-48 flex items-center justify-center overflow-hidden">
+              <video
+              src={ gif }
+                alt="Blow Hard"
+                className="w-full h-full object-contain transition-opacity duration-500"
+                style={{ opacity: showBlowGif ? 1 : 0 }}
+              />
+            </div>        </>
       )}
+
+    
 
       {/* BLOWING */}
       {stage === "blowing" && (
