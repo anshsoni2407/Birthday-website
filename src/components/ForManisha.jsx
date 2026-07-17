@@ -15,6 +15,7 @@ const ForManisha = () => {
   const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
   const [showBtn, setShowBtn] = useState(false);
   const [showStory, setShowStory] = useState(false);
+  const [hasBlasted, setHasBlasted] = useState(false);
 
   /* COUNTDOWN */
   useEffect(() => {
@@ -27,10 +28,7 @@ const ForManisha = () => {
       if (diff <= 0) {
         setTime({ d: 0, h: 0, m: 0, s: 0 });
         setShowBtn(true);
-        if (!blasted) {
-          blasted = true;
-          blast();
-        }
+      
         return;
       }
 
@@ -44,14 +42,40 @@ const ForManisha = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  const emojis = [
+    "❤️",
+    "💖",
+    "💕",
+    "💗",
+    "💓",
+    "💞",
+    "💘",
+    "💝",
+    "🩷",
+    "🥰",
+    "😍",
+    "😘",
+    "✨",
+   
+    "💫",
+ 
+    "🦋",
+    "🎉",
+    "🎊",
+  
+    "🎀",
+  ];
   const heartRain = () => {
     const heart = document.createElement("div");
     heart.className = "heart";
-    heart.innerText = "💖";
+    heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
 
     heart.style.left = Math.random() * 100 + "%";
     heart.style.animationDuration = 3 + Math.random() * 3 + "s";
-
+heart.style.fontSize = 20 + Math.random() * 30 + "px";
+heart.style.opacity = 0.5 + Math.random() * 0.5;
+heart.style.transform = `rotate(${Math.random() * 360}deg)`;
     effectsRef.current.appendChild(heart);
 
     setTimeout(() => heart.remove(), 8000);
@@ -93,7 +117,12 @@ const ForManisha = () => {
       setTimeout(() => c.remove(), 8000);
     }
   };
-
+useEffect(() => {
+  if (showBtn && curtainOpen && !hasBlasted) {
+    blast();
+    setHasBlasted(true);
+  }
+}, [showBtn, curtainOpen, hasBlasted]);
   const toggleMusic = () => {
     const audio = musicRef.current;
     if (!audio) return;
