@@ -107,7 +107,7 @@ heart.style.transform = `rotate(${Math.random() * 360}deg)`;
   }, [curtainOpen]);
 
   const blast = () => {
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 200; i++) {
       const c = document.createElement("div");
       c.className = "confetti";
       c.style.left = Math.random() * 100 + "%";

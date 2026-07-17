@@ -168,7 +168,7 @@ const CandleBlow = () => {
           <button
             onClick={() => {
               resetCandle();
-              navigate("/video");
+              navigate("/env");
             }}
             className="mt-4 text-xl font-semibold bg-pink-400 text-white py-4 px-6 rounded-2xl"
           >
