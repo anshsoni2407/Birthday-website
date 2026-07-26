@@ -31,7 +31,10 @@ const DateLocker = memo(() => {
 
   /* Open native date picker on any click/focus inside the input */
   const openPicker = useCallback(() => {
-    if (dateInputRef.current && typeof dateInputRef.current.showPicker === "function") {
+    if (
+      dateInputRef.current &&
+      typeof dateInputRef.current.showPicker === "function"
+    ) {
       try {
         dateInputRef.current.showPicker();
       } catch {
@@ -79,7 +82,7 @@ const DateLocker = memo(() => {
           {h.emoji}
         </motion.div>
       )),
-    []
+    [],
   );
 
   return (
@@ -116,7 +119,11 @@ const DateLocker = memo(() => {
               <motion.div
                 className="text-6xl mb-4"
                 animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               >
                 🔒
               </motion.div>
@@ -141,6 +148,30 @@ const DateLocker = memo(() => {
                   focus-within:border-pink-400 focus-within:ring-2 focus-within:ring-pink-400/40
                 `}
               >
+                {/* Custom floating placeholder */}
+                <span
+                  className="absolute pointer-events-none transition-all duration-300 ease-out text-white"
+                  style={
+                    date
+                      ? {
+                          top: "6px",
+                          left: "16px",
+                          fontSize: "11px",
+                          opacity: 0.5,
+                          transform: "translate3d(0, 0, 0)",
+                        }
+                      : {
+                          top: "50%",
+                          left: "50%",
+                          fontSize: "inherit",
+                          opacity: 0.55,
+                          transform: "translate3d(-50%, -50%, 0)",
+                        }
+                  }
+                >
+                  Select Our First Kiss Date 💋
+                </span>
+
                 <input
                   ref={dateInputRef}
                   type="date"
@@ -148,15 +179,17 @@ const DateLocker = memo(() => {
                   onChange={handleDateChange}
                   onClick={openPicker}
                   onFocus={openPicker}
-                  className="
+                  className={`
                     block w-full min-w-0 box-border
-                    px-4 sm:px-5 py-4 cursor-pointer
+                    px-4 sm:px-5 cursor-pointer
                     bg-transparent
                     text-white text-center text-base sm:text-lg font-medium
                     outline-none border-none
                     [color-scheme:dark]
                     appearance-none
-                  "
+                    ${date ? "pt-6 pb-2" : "py-4"}
+                    transition-all duration-300
+                  `}
                 />
               </div>
 
@@ -234,7 +267,9 @@ const DateLocker = memo(() => {
               >
                 I knew you would 🥰
                 <br />
-                <span className="text-pink-300">That day changed everything…</span>
+                <span className="text-pink-300">
+                  That day changed everything…
+                </span>
               </motion.p>
 
               {/* Sparkle emojis */}
@@ -252,7 +287,7 @@ const DateLocker = memo(() => {
                       duration: 1.5,
                       repeat: Infinity,
                       delay: i * 0.15,
-                      ease: "easeInOut", 
+                      ease: "easeInOut",
                     }}
                   >
                     {e}
