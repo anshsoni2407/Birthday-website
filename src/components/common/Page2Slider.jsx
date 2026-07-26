@@ -11,9 +11,9 @@ const memories = [
   { img: pa1, title: "The Beginning ❤️", text: "Beautiful memories always stay forever." },
   { img: pa2, title: "Countdown khatam… ⏳", text: "The excitement builds as we approach the day." },
   { img: pa3, title: "Music chal raha… 🎵", text: "Melodies that echo the love in the air." },
-  { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!", isLast: true },
+  { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!", },
   { img: pa3, title: "Music chal raha… 🎵", text: "Melodies that echo the love in the air." },
-  { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!", isLast: true },
+  { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!"},
   { img: pa3, title: "Music chal raha… 🎵", text: "Melodies that echo the love in the air." },
   { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!", isLast: true },
 ];

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, memo } from "react";
+import React, { useState, useCallback, useMemo, useRef, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import bgPhone from "../assets/Anuj/bgPhone.png";
@@ -15,6 +15,7 @@ const HEARTS = Array.from({ length: 14 }).map((_, i) => ({
 
 const DateLocker = memo(() => {
   const navigate = useNavigate();
+  const dateInputRef = useRef(null);
   const [date, setDate] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [shake, setShake] = useState(false);
@@ -26,6 +27,17 @@ const DateLocker = memo(() => {
     setDate(e.target.value);
     setShake(false);
     setAttempted(false);
+  }, []);
+
+  /* Open native date picker on any click/focus inside the input */
+  const openPicker = useCallback(() => {
+    if (dateInputRef.current && typeof dateInputRef.current.showPicker === "function") {
+      try {
+        dateInputRef.current.showPicker();
+      } catch {
+        // Silently ignore – some browsers throw if already open
+      }
+    }
   }, []);
 
   const handleUnlock = useCallback(() => {
@@ -40,7 +52,7 @@ const DateLocker = memo(() => {
   }, [date, targetDate]);
 
   const handleContinue = useCallback(() => {
-    navigate("/");
+    navigate("/env");
   }, [navigate]);
 
   /* Floating hearts – memoized so they don't re-render on state change */
@@ -120,21 +132,30 @@ const DateLocker = memo(() => {
               </p>
 
               {/* Date input */}
-              <div className="relative mb-4">
+              <div
+                className={`
+                  relative mb-4 w-full overflow-hidden rounded-2xl
+                  bg-white/15 backdrop-blur-sm
+                  border border-white/25
+                  transition-all duration-300
+                  focus-within:border-pink-400 focus-within:ring-2 focus-within:ring-pink-400/40
+                `}
+              >
                 <input
+                  ref={dateInputRef}
                   type="date"
                   value={date}
                   onChange={handleDateChange}
+                  onClick={openPicker}
+                  onFocus={openPicker}
                   className="
-                    w-full px-5 py-4 rounded-2xl
-                    bg-white/15 backdrop-blur-sm
-                    border border-white/25
-                    text-white text-center text-lg font-medium
-                    outline-none
-                    focus:border-pink-400 focus:ring-2 focus:ring-pink-400/40
-                    transition-all duration-300
-                    placeholder:text-white/40
+                    block w-full min-w-0 box-border
+                    px-4 sm:px-5 py-4 cursor-pointer
+                    bg-transparent
+                    text-white text-center text-base sm:text-lg font-medium
+                    outline-none border-none
                     [color-scheme:dark]
+                    appearance-none
                   "
                 />
               </div>
