@@ -95,7 +95,7 @@ const Page2Slider = memo(({ showStory }) => {
       <AnimatePresence>
         {selected && (
           <motion.div
-            className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50"
+            className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 cursor-pointer"
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
@@ -103,31 +103,34 @@ const Page2Slider = memo(({ showStory }) => {
             onClick={closeModal}
           >
             <motion.div
-              className="bg-white rounded-2xl p-4 max-w-md w-full mx-4 overflow-auto"
+              className="bg-white rounded-2xl p-4 max-w-md w-full mx-4 overflow-auto relative"
               variants={modalVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              onClick={(e) => e.stopPropagation()}
             >
               <img
                 src={selected.img}
                 alt={selected.title}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-auto object-cover rounded-xl mb-4"
+                className="w-full h-auto object-cover rounded-xl mb-4 cursor-pointer"
               />
               <h2 className="text-xl font-bold mb-2 text-center">{selected.title}</h2>
               <p className="text-gray-700 mb-4 text-center">{selected.text}</p>
               {selected.isLast && (
                 <button
-                  onClick={goToCakeFromModal}
+                  onClick={(e) => { e.stopPropagation(); goToCakeFromModal(); }}
                   className="w-full bg-pink-600 text-white py-2 rounded-lg mt-2 hover:bg-pink-700 transition"
                 >
                   🎂 It's time to cut the cake
                 </button>
               )}
-              <button onClick={closeModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" aria-label="Close">
+              <button
+                onClick={(e) => { e.stopPropagation(); closeModal(); }}
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+                aria-label="Close"
+              >
                 ✕
               </button>
             </motion.div>
