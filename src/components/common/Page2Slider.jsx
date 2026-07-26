@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import pa1 from "../../assets/Anuj/pa1.jpeg";
@@ -29,12 +29,18 @@ const modalVariants = {
   exit: { scale: 0.8, opacity: 0, transition: { duration: 0.2 } },
 };
 
-const Page2Slider = ({ showStory }) => {
+const Page2Slider = memo(({ showStory }) => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
 
-  const openModal = (memory) => setSelected(memory);
-  const closeModal = () => setSelected(null);
+  const openModal = useCallback((memory) => setSelected(memory), []);
+  const closeModal = useCallback(() => setSelected(null), []);
+  const goBack = useCallback(() => navigate(-1), [navigate]);
+  const goToCake = useCallback(() => navigate("/candleBlow"), [navigate]);
+  const goToCakeFromModal = useCallback(() => {
+    setSelected(null);
+    navigate("/candleBlow");
+  }, [navigate]);
 
   return (
     <div
@@ -46,7 +52,7 @@ const Page2Slider = ({ showStory }) => {
     >
       {/* Header */}
       <header className="w-full flex items-center justify-between bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-t-2xl">
-        <button onClick={() => navigate(-1)} className="text-white text-xl" aria-label="Back">
+        <button onClick={goBack} className="text-white text-xl" aria-label="Back">
           ←
         </button>
         <h1 className="text-white text-lg font-semibold">Memories Gallery 💖</h1>
@@ -64,14 +70,20 @@ const Page2Slider = ({ showStory }) => {
               whileTap={{ scale: 0.96 }}
               onClick={() => openModal(mem)}
             >
-              <img src={mem.img} alt={mem.title} className="w-full h-full object-cover rounded-2xl shadow-lg" />
+              <img
+                src={mem.img}
+                alt={mem.title}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover rounded-2xl shadow-lg"
+              />
             </motion.div>
           ))}
         </div>
         {/* Persistent button at bottom */}
         <div className="flex justify-center mt-4">
           <button
-            onClick={() => navigate('/candleBlow')}
+            onClick={goToCake}
             className="bg-pink-600 text-white py-2 px-6 rounded-full hover:bg-pink-700 transition"
           >
             🎂 It's time to cut the cake
@@ -98,12 +110,18 @@ const Page2Slider = ({ showStory }) => {
               exit="exit"
               onClick={(e) => e.stopPropagation()}
             >
-              <img src={selected.img} alt={selected.title} className="w-full h-auto object-cover rounded-xl mb-4" />
+              <img
+                src={selected.img}
+                alt={selected.title}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-auto object-cover rounded-xl mb-4"
+              />
               <h2 className="text-xl font-bold mb-2 text-center">{selected.title}</h2>
               <p className="text-gray-700 mb-4 text-center">{selected.text}</p>
               {selected.isLast && (
                 <button
-                  onClick={() => { closeModal(); navigate('/candleBlow'); }}
+                  onClick={goToCakeFromModal}
                   className="w-full bg-pink-600 text-white py-2 rounded-lg mt-2 hover:bg-pink-700 transition"
                 >
                   🎂 It's time to cut the cake
@@ -118,6 +136,8 @@ const Page2Slider = ({ showStory }) => {
       </AnimatePresence>
     </div>
   );
-};
+});
+
+Page2Slider.displayName = "Page2Slider";
 
 export default Page2Slider;

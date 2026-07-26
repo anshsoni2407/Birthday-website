@@ -1,17 +1,17 @@
-import { useRef } from "react";
+import React, { useRef, useCallback, memo } from "react";
 import musicFile from "../assets/music.mp3";
 
-const CurtainIntro = ({ onOpen }) => {
+const CurtainIntro = memo(({ onOpen }) => {
   const audioRef = useRef(null);
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     audioRef.current.play(); // start music on click
     onOpen();
-  };
+  }, [onOpen]);
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black">
-      <audio ref={audioRef} src={musicFile} loop />
+      <audio ref={audioRef} src={musicFile} loop preload="metadata" />
 
       {/* LEFT CURTAIN */}
       <div
@@ -20,6 +20,7 @@ const CurtainIntro = ({ onOpen }) => {
           bg-gradient-to-r from-red-950 via-red-800 to-red-600
           shadow-[inset_-15px_0_30px_rgba(0,0,0,0.6)]
         "
+        style={{ willChange: "transform", contain: "layout style paint" }}
       />
 
       {/* RIGHT CURTAIN */}
@@ -29,6 +30,7 @@ const CurtainIntro = ({ onOpen }) => {
           bg-gradient-to-l from-red-950 via-red-800 to-red-600
           shadow-[inset_15px_0_30px_rgba(0,0,0,0.6)]
         "
+        style={{ willChange: "transform", contain: "layout style paint" }}
       />
 
       {/* CENTER SPLIT LINE */}
@@ -51,6 +53,8 @@ const CurtainIntro = ({ onOpen }) => {
       </div>
     </div>
   );
-};
+});
+
+CurtainIntro.displayName = "CurtainIntro";
 
 export default CurtainIntro;

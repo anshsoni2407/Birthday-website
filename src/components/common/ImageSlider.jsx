@@ -1,52 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import ps1 from '../../assets/Anuj/ps1.jpeg'
-import ps2 from "../../assets/Anuj/ps1.jpeg";
-import ps3 from "../../assets/Anuj/ps1.jpeg";
-import ps4 from "../../assets/Anuj/ps1.jpeg";
-import ps5 from "../../assets/Anuj/ps1.jpeg";
-import ps6 from "../../assets/Anuj/ps1.jpeg";
-import ps7 from "../../assets/Anuj/ps1.jpeg";
-import ps8 from "../../assets/Anuj/ps1.jpeg";
-
-import images from "../../assets/images";
+import React, { useEffect, useRef, useState, useCallback, memo } from "react";
+import ps1 from "../../assets/Anuj/ps1.jpeg";
+import ps2 from "../../assets/Anuj/ps2.jpeg";
+import ps3 from "../../assets/Anuj/ps3.jpeg";
+import ps4 from "../../assets/Anuj/ps4.jpeg";
+import ps5 from "../../assets/Anuj/ps5.jpeg";
+import ps6 from "../../assets/Anuj/ps6.jpeg";
+import ps7 from "../../assets/Anuj/ps7.jpeg";
+import ps8 from "../../assets/Anuj/ps8.jpeg";
 
 const slides = [
-  {
-    img: ps2,
-    text: "Tumhari ye muskaan hi mera sabse bada gift hai 💖",
-  },
-  {
-    img: ps1,
-    text: "Tum mere liye kisi dua se kam nahi ho 💫❤️",
-  },
-  {
-    img: ps3,
-    text: "Har rang tum pe jachta hai 💕",
-  },
-  {
-    img: ps4,
-    text: "You make my heart skip a beat ❤️",
-  },
-  {
-    img: ps5,
-    text: "You are my all of today and all of my tomorrow 💞",
-  },
-  {
-    img: ps6,
-    text: "You are my happy place 🌸",
-  },
-  {
-    img: ps7,
-    text: "I pick you, always and forever ♾️❤️",
-  },
-  {
-    img: ps8,
-    text: "My world in a picture 🌍💖",
-  },
+  { img: ps2, text: "Tumhari ye muskaan hi mera sabse bada gift hai 💖" },
+  { img: ps1, text: "Tum mere liye kisi dua se kam nahi ho 💫❤️" },
+  { img: ps3, text: "Har rang tum pe jachta hai 💕" },
+  { img: ps4, text: "You make my heart skip a beat ❤️" },
+  { img: ps5, text: "You are my all of today and all of my tomorrow 💞" },
+  { img: ps6, text: "You are my happy place 🌸" },
+  { img: ps7, text: "I pick you, always and forever ♾️❤️" },
+  { img: ps8, text: "My world in a picture 🌍💖" },
 ];
 
-
-const ImageSlider = () => {
+const ImageSlider = memo(() => {
   const [index, setIndex] = useState(0);
   const startX = useRef(0);
   const endX = useRef(0);
@@ -56,33 +29,29 @@ const ImageSlider = () => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % slides.length);
     }, 3500);
-
     return () => clearInterval(timer);
   }, []);
 
-  /* SWIPE HANDLERS */
-  const onTouchStart = (e) => {
+  /* SWIPE HANDLERS – memoized */
+  const onTouchStart = useCallback((e) => {
     startX.current = e.touches[0].clientX;
-  };
+  }, []);
 
-  const onTouchMove = (e) => {
+  const onTouchMove = useCallback((e) => {
     endX.current = e.touches[0].clientX;
-  };
+  }, []);
 
-  const onTouchEnd = () => {
+  const onTouchEnd = useCallback(() => {
     const diff = startX.current - endX.current;
-
     if (Math.abs(diff) < 50) return;
-
     if (diff > 0) {
       setIndex((prev) => (prev + 1) % slides.length);
     } else {
       setIndex((prev) => (prev - 1 + slides.length) % slides.length);
     }
-
     startX.current = 0;
     endX.current = 0;
-  };
+  }, []);
 
   return (
     <div className="relative w-full max-w-xl mx-auto mb-10">
@@ -95,7 +64,10 @@ const ImageSlider = () => {
       >
         <div
           className="flex transition-transform duration-700 ease-out"
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          style={{
+            transform: `translate3d(-${index * 100}%, 0, 0)`,
+            willChange: "transform",
+          }}
         >
           {slides.map((slide, i) => (
             <div
@@ -108,7 +80,8 @@ const ImageSlider = () => {
                 <img
                   src={slide.img}
                   alt={`slide-${i}`}
-                  loading="lazy"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
                   className="max-h-full max-w-full object-contain"
                 />
 
@@ -134,6 +107,8 @@ const ImageSlider = () => {
       </div>
     </div>
   );
-};
+});
+
+ImageSlider.displayName = "ImageSlider";
 
 export default ImageSlider;

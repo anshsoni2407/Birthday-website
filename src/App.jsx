@@ -1,21 +1,34 @@
-import React from "react";
-import HomePage from "./components/NavigationPage";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import NavigationPage from "./components/NavigationPage";
 import ForManisha from "./components/ForManisha";
-import EnvelopeComponent from "./components/Envelope.jsx";
-import CandleBlow from "./components/CandleBlow";
+import DateLocker from "./components/DateLocker.jsx";
+
+const NavigationPage = lazy(() => import("./components/NavigationPage"));
+const EnvelopeComponent = lazy(() => import("./components/Envelope.jsx"));
+const CandleBlow = lazy(() => import("./components/CandleBlow"));
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<ForManisha />} />
-        <Route path="/candleBlow" element={<CandleBlow />} />
-
-        <Route path="*" element={<HomePage />} />
-        <Route path="/env" element={<EnvelopeComponent />} />
-      </Routes>
+      <Suspense
+        fallback={
+          <div
+            style={{
+              minHeight: "100vh",
+              backgroundColor: "#000",
+            }}
+          />
+        }
+      >
+        <Routes>
+          <Route path="/" element={<ForManisha />} />
+          <Route path="/candleBlow" element={<CandleBlow />} />
+          <Route path="*" element={<NavigationPage />} />
+          <Route path="/date-lock" element={<DateLocker />} />
+         
+          <Route path="/env" element={<EnvelopeComponent />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 };
