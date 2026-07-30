@@ -100,7 +100,7 @@ export default function Envelope() {
         {stage === "closed" && (
           <motion.div
             key="closed"
-            className="absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 flex flex-col items-center justify-center"
             // No entry animation – visible immediately
             initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
@@ -124,10 +124,13 @@ export default function Envelope() {
         {stage === "opened" && (
           <motion.div
             key="opened"
-            className="absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 flex flex-col items-center justify-center"
             // Fade‑in entry
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.5, ease: "easeOut" } }}
+            animate={{
+              opacity: 1,
+              transition: { duration: 0.5, ease: "easeOut" },
+            }}
             // Fade out on exit
             exit={{ opacity: 0, transition: { duration: 0.4, ease: "easeIn" } }}
             onClick={handleOpenedClick}
@@ -151,7 +154,10 @@ export default function Envelope() {
             className="absolute inset-0 flex flex-col items-center justify-center"
             // Fade‑in entry
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.5, ease: "easeOut" } }}
+            animate={{
+              opacity: 1,
+              transition: { duration: 0.5, ease: "easeOut" },
+            }}
           >
             <img
               src={LetterImg}
@@ -169,7 +175,10 @@ export default function Envelope() {
               <motion.button
                 className="mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold shadow-xl hover:scale-105"
                 whileHover={{ scale: 1.05 }}
-                animate={{ y: [0, -5, 0], transition: { repeat: Infinity, duration: 3 } }}
+                animate={{
+                  y: [0, -5, 0],
+                  transition: { repeat: Infinity, duration: 3 },
+                }}
                 onClick={goHome}
               >
                 🏠 Go Back to Home Page

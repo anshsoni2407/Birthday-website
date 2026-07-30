@@ -1,16 +1,29 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import gif from "../assets/Anuj/gif.mp4";
+
+/* ──────────────────────────────────────
+   Helper: pick gradient color by strength
+   ────────────────────────────────────── */
+const getBarColor = (v) => {
+  if (v <= 20) return "linear-gradient(90deg, #6b7280, #9ca3af)";       // Gray
+  if (v <= 50) return "linear-gradient(90deg, #3b82f6, #60a5fa)";       // Blue
+  if (v <= 90) return "linear-gradient(90deg, #f97316, #fb923c)";       // Orange
+  return "linear-gradient(90deg, #22c55e, #4ade80)";                    // Green
+};
+
+const getGlowColor = (v) => {
+  if (v <= 20) return "rgba(107,114,128,0.35)";
+  if (v <= 50) return "rgba(59,130,246,0.45)";
+  if (v <= 90) return "rgba(249,115,22,0.45)";
+  return "rgba(34,197,94,0.55)";
+};
 
 const CandleBlow = memo(() => {
   const [stage, setStage] = useState("before"); // before | blowing | after
   const [listening, setListening] = useState(false);
-  const [showBlowGif, setShowBlowGif] = useState(false);
+  const [micStrength, setMicStrength] = useState(0);
+
   const blownRef = useRef(false);
-  // Ref mirror for showBlowGif – used inside rAF to avoid stale closure
-  const showBlowGifRef = useRef(false);
-  // Timestamp when GIF became visible, used to enforce minimum 2‑second display
-  const gifShownAtRef = useRef(null);
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const dataArrayRef = useRef(null);
@@ -25,51 +38,34 @@ const CandleBlow = memo(() => {
     setListening(false);
   }, []);
 
-  /* Keep ref in sync with state */
-  useEffect(() => {
-    showBlowGifRef.current = showBlowGif;
-  }, [showBlowGif]);
-
   // 💨 Detect air blow – uses refs to avoid stale closures
   const detectBlow = useCallback(() => {
     if (!analyserRef.current || !dataArrayRef.current) return;
     analyserRef.current.getByteFrequencyData(dataArrayRef.current);
 
-    const volume =
+    const raw =
       dataArrayRef.current.reduce((a, b) => a + b, 0) /
       dataArrayRef.current.length;
 
-    // Volume >= 70 -> blow candle immediately
-    if (volume > 70) {
+    // Map raw analyser volume (typically 0‑128) → 0‑100 for the meter
+    const strength = Math.min(100, Math.round((raw / 128) * 100));
+
+    // Update meter in every frame for smooth animation
+    setMicStrength(strength);
+
+    // strength >= 90 → blow candle
+    if (strength >= 90) {
       if (!blownRef.current) {
         blownRef.current = true;
-        // Inline blowCandle logic to avoid dependency
         cancelAnimationFrame(animationRef.current);
         setListening(false);
-        setShowBlowGif(false);
+        setMicStrength(0);
         setStage("blowing");
         setTimeout(() => {
           setStage("after");
         }, 2500);
       }
       return; // stop further monitoring
-    }
-
-    // Volume between 20 and 70 -> show GIF
-    if (volume >= 20 && volume <= 70) {
-      if (!showBlowGifRef.current) {
-        gifShownAtRef.current = Date.now();
-        setShowBlowGif(true);
-      }
-    } else {
-      // Volume < 20 -> hide GIF only after it has been visible for >=2 seconds
-      if (showBlowGifRef.current && gifShownAtRef.current) {
-        const elapsed = Date.now() - gifShownAtRef.current;
-        if (elapsed >= 2000) {
-          setShowBlowGif(false);
-          gifShownAtRef.current = null;
-        }
-      }
     }
 
     // Continue monitoring via animation frame (unless blown)
@@ -110,7 +106,6 @@ const CandleBlow = memo(() => {
   const goToEnvelope = useCallback(() => {
     resetCandle();
     navigate('/date-lock')
-    // navigate("/env");
   }, [resetCandle, navigate]);
 
   /* Cleanup: cancel rAF, close AudioContext, stop mic stream */
@@ -150,26 +145,51 @@ const CandleBlow = memo(() => {
             {listening ? "Blow the Candle 💨" : "Start Mic 🎤"}
           </button>
 
-          {/* Instruction text – only when listening and GIF not visible */}
-          {listening && !showBlowGif && (
+          {/* Instruction text – only when listening */}
+          {listening && (
             <p className="mt-4 text-lg animate-bounce">Blow into the mic 🎂</p>
           )}
-          {/* Fixed‑size container for GIF to prevent layout shifts */}
-          <div className="mt-4 w-48 h-48 flex items-center justify-center overflow-hidden">
-            <video
-              src={gif}
-              alt="Blow Hard"
-              className="w-full h-full object-contain"
-              style={{
-                opacity: showBlowGif ? 1 : 0,
-                transition: "opacity 0.5s",
-                willChange: "opacity",
-              }}
-              preload="metadata"
-              playsInline
-              muted
-            />
-          </div>
+
+          {/* ── Mic Strength Meter ── */}
+          {listening && (
+            <div className="mic-meter-wrapper">
+              {/* Label */}
+              <div className="mic-meter-label">
+                <span className="mic-meter-icon">🎤</span>
+                <span>
+                  Mic Strength:{" "}
+                  <span className="mic-meter-value">{micStrength}</span>
+                </span>
+              </div>
+
+              {/* Track */}
+              <div className="mic-meter-track">
+                {/* Fill */}
+                <div
+                  className="mic-meter-fill"
+                  style={{
+                    width: `${micStrength}%`,
+                    background: getBarColor(micStrength),
+                    boxShadow: `0 0 14px 2px ${getGlowColor(micStrength)}`,
+                  }}
+                />
+
+                {/* Threshold marker at 90 */}
+                <div className="mic-meter-threshold" title="Blow threshold (90)">
+                  <span className="mic-meter-threshold-label">90</span>
+                </div>
+              </div>
+
+              {/* Hint */}
+              <p className="mic-meter-hint">
+                {micStrength < 20
+                  ? "Blow harder…"
+                  : micStrength < 90
+                    ? "Almost there — keep going!"
+                    : "🔥 Full power!"}
+              </p>
+            </div>
+          )}
         </>
       )}
 
