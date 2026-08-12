@@ -1,139 +1,799 @@
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback, useEffect, memo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+
 import pa1 from "../../assets/Anuj/pa1.jpeg";
 import pa2 from "../../assets/Anuj/pa2.jpeg";
 import pa3 from "../../assets/Anuj/pa3.jpeg";
 import pa4 from "../../assets/Anuj/pa4.jpeg";
 
-// Memory objects – title and text for each image
+/* ─────────────────────────────────────────────
+   MEMORY DATA
+───────────────────────────────────────────── */
+
 const memories = [
-  { img: pa1, title: "The Beginning ❤️", text: "Beautiful memories always stay forever." },
-  { img: pa2, title: "Countdown khatam… ⏳", text: "The excitement builds as we approach the day." },
-  { img: pa3, title: "Music chal raha… 🎵", text: "Melodies that echo the love in the air." },
-  { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!", },
-  { img: pa3, title: "Music chal raha… 🎵", text: "Melodies that echo the love in the air." },
-  { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!"},
-  { img: pa3, title: "Music chal raha… 🎵", text: "Melodies that echo the love in the air." },
-  { img: pa4, title: "Aur ye sirf shuruaat hai 💕", text: "The journey has just begun, stay tuned!", isLast: true },
+  {
+    img: pa1,
+    title: "The Beginning ❤️",
+    text: "Beautiful memories always stay forever.",
+  },
+  {
+    img: pa2,
+    title: "Countdown khatam… ⏳",
+    text: "The excitement builds as we approach the day.",
+  },
+  {
+    img: pa3,
+    title: "Music chal raha… 🎵",
+    text: "Melodies that echo the love in the air.",
+  },
+  {
+    img: pa4,
+    title: "Aur ye sirf shuruaat hai 💕",
+    text: "The journey has just begun, stay tuned!",
+  },
+  {
+    img: pa3,
+    title: "Music chal raha… 🎵",
+    text: "Melodies that echo the love in the air.",
+  },
+  {
+    img: pa4,
+    title: "Aur ye sirf shuruaat hai 💕",
+    text: "The journey has just begun, stay tuned!",
+  },
+  {
+    img: pa3,
+    title: "Music chal raha… 🎵",
+    text: "Melodies that echo the love in the air.",
+  },
+  {
+    img: pa4,
+    title: "Aur ye sirf shuruaat hai 💕",
+    text: "The journey has just begun, stay tuned!",
+    isLast: true,
+  },
 ];
 
+/* ─────────────────────────────────────────────
+   MODAL ANIMATION
+───────────────────────────────────────────── */
+
 const overlayVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.3 } },
+  hidden: {
+    opacity: 0,
+  },
+
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
+
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.25,
+      ease: "easeIn",
+    },
+  },
 };
 
-const modalVariants = {
-  hidden: { scale: 0.8, opacity: 0 },
-  visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 30 } },
-  exit: { scale: 0.8, opacity: 0, transition: { duration: 0.2 } },
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.92,
+    y: 12,
+  },
+
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.35,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+
+  exit: {
+    opacity: 0,
+    scale: 0.94,
+    y: 8,
+    transition: {
+      duration: 0.2,
+      ease: "easeIn",
+    },
+  },
 };
+
+/* ─────────────────────────────────────────────
+   PAGE 2 SLIDER
+───────────────────────────────────────────── */
 
 const Page2Slider = memo(({ showStory }) => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState(null);
 
-  const openModal = useCallback((memory) => setSelected(memory), []);
-  const closeModal = useCallback(() => setSelected(null), []);
-  const goBack = useCallback(() => navigate(-1), [navigate]);
-  const goToCake = useCallback(() => navigate("/candleBlow"), [navigate]);
-  const goToCakeFromModal = useCallback(() => {
-    setSelected(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  /* ─────────────────────────────────────────
+     SELECTED MEMORY
+  ───────────────────────────────────────── */
+
+  const selected = selectedIndex !== null ? memories[selectedIndex] : null;
+
+  /* ─────────────────────────────────────────
+     OPEN MODAL
+  ───────────────────────────────────────── */
+
+  const openModal = useCallback((index) => {
+    setSelectedIndex(index);
+    setImageLoaded(false);
+  }, []);
+
+  /* ─────────────────────────────────────────
+     CLOSE MODAL
+  ───────────────────────────────────────── */
+
+  const closeModal = useCallback(() => {
+    setSelectedIndex(null);
+    setImageLoaded(false);
+  }, []);
+
+  /* ─────────────────────────────────────────
+     NAVIGATION
+  ───────────────────────────────────────── */
+
+  const goBack = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
+  const goToCake = useCallback(() => {
     navigate("/candleBlow");
   }, [navigate]);
+
+  /* ─────────────────────────────────────────
+     NEXT MEMORY
+  ───────────────────────────────────────── */
+
+  const nextMemory = useCallback(() => {
+    setSelectedIndex((current) => {
+      if (current === null) return 0;
+
+      return (current + 1) % memories.length;
+    });
+
+    setImageLoaded(false);
+  }, []);
+
+  /* ─────────────────────────────────────────
+     PREVIOUS MEMORY
+  ───────────────────────────────────────── */
+
+  const previousMemory = useCallback(() => {
+    setSelectedIndex((current) => {
+      if (current === null) return 0;
+
+      return (current - 1 + memories.length) % memories.length;
+    });
+
+    setImageLoaded(false);
+  }, []);
+
+  /* ─────────────────────────────────────────
+     GO TO CAKE FROM MODAL
+  ───────────────────────────────────────── */
+
+  const goToCakeFromModal = useCallback(() => {
+    setSelectedIndex(null);
+    navigate("/candleBlow");
+  }, [navigate]);
+
+  /* ─────────────────────────────────────────
+     KEYBOARD CONTROLS
+  ───────────────────────────────────────── */
+
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+
+      if (event.key === "ArrowRight") {
+        nextMemory();
+      }
+
+      if (event.key === "ArrowLeft") {
+        previousMemory();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedIndex, closeModal, nextMemory, previousMemory]);
+
+  /* ─────────────────────────────────────────
+     LOCK BODY SCROLL
+  ───────────────────────────────────────── */
+
+  useEffect(() => {
+    if (selectedIndex !== null) {
+      const previousOverflow = document.body.style.overflow;
+
+      document.body.style.overflow = "hidden";
+
+      return () => {
+        document.body.style.overflow = previousOverflow;
+      };
+    }
+
+    return undefined;
+  }, [selectedIndex]);
+
+  /* ─────────────────────────────────────────
+     TOUCH START
+  ───────────────────────────────────────── */
+
+  const handleTouchStart = useCallback((event) => {
+    touchStartX.current = event.touches[0].clientX;
+
+    touchEndX.current = event.touches[0].clientX;
+  }, []);
+
+  /* ─────────────────────────────────────────
+     TOUCH MOVE
+  ───────────────────────────────────────── */
+
+  const handleTouchMove = useCallback((event) => {
+    touchEndX.current = event.touches[0].clientX;
+  }, []);
+
+  /* ─────────────────────────────────────────
+     TOUCH END
+  ───────────────────────────────────────── */
+
+  const handleTouchEnd = useCallback(() => {
+    const difference = touchStartX.current - touchEndX.current;
+
+    if (Math.abs(difference) < 50) {
+      return;
+    }
+
+    if (difference > 0) {
+      nextMemory();
+    } else {
+      previousMemory();
+    }
+
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  }, [nextMemory, previousMemory]);
 
   return (
     <div
       className={`
         ${showStory ? "opacity-100 scale-100" : "opacity-0 scale-95"}
-        transition-opacity duration-500 ease-out
-        flex flex-col min-h-screen w-full max-w-2xl mx-auto
+        transition-all
+        duration-500
+        ease-out
+        flex
+        flex-col
+        min-h-screen
+        w-full
+        max-w-2xl
+        mx-auto
       `}
     >
-      {/* Header */}
-      <header className="w-full flex items-center justify-between bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-t-2xl">
-        <button onClick={goBack} className="text-white text-xl" aria-label="Back">
+      {/* ─────────────────────────────────────
+          HEADER
+      ───────────────────────────────────── */}
+
+      <header
+        className="
+          w-full
+          flex
+          items-center
+          justify-between
+          p-4
+        "
+      >
+        <button
+          onClick={goBack}
+          className="
+            w-10
+            h-10
+            rounded-full
+            border
+            border-white/20
+            bg-black/10
+            text-white
+            text-xl
+            flex
+            items-center
+            justify-center
+            hover:bg-white/10
+            transition
+          "
+          aria-label="Back"
+        >
           ←
         </button>
-        <h1 className="text-white text-lg font-semibold">Memories Gallery 💖</h1>
-        <div className="w-6" />
+
+        <h1
+          className="
+            text-white
+            text-lg
+            font-semibold
+          "
+        >
+          Memories Gallery 💖
+        </h1>
+
+        <div className="w-10" />
       </header>
 
-      {/* Gallery – squares, bottom‑aligned */}
-      <div className="flex-1 flex flex-col justify-end p-4 w-full">
+      {/* ─────────────────────────────────────
+          GALLERY
+      ───────────────────────────────────── */}
+
+      <div
+        className="
+          flex-1
+          flex
+          flex-col
+          justify-end
+          p-4
+          w-full
+        "
+      >
         <div className="grid grid-cols-2 gap-4">
-          {memories.map((mem, idx) => (
-            <motion.div
-              key={idx}
-              className="relative cursor-pointer aspect-square overflow-hidden"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => openModal(mem)}
+          {memories.map((memory, index) => (
+            <motion.button
+              key={index}
+              type="button"
+              className="
+                relative
+                cursor-pointer
+                aspect-square
+                overflow-hidden
+                rounded-2xl
+                outline-none
+              "
+              whileHover={{
+                scale: 1.04,
+              }}
+              whileTap={{
+                scale: 0.96,
+              }}
+              onClick={() => openModal(index)}
+              aria-label={`Open ${memory.title}`}
             >
               <img
-                src={mem.img}
-                alt={mem.title}
+                src={memory.img}
+                alt={memory.title}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-cover rounded-2xl shadow-lg"
+                className="
+                  w-full
+                  h-full
+                  object-cover
+                  rounded-2xl
+                  shadow-lg
+                "
               />
-            </motion.div>
+            </motion.button>
           ))}
         </div>
-        {/* Persistent button at bottom */}
+
+        {/* Cake Button */}
+
         <div className="flex justify-center mt-4">
           <button
             onClick={goToCake}
-            className="bg-pink-600 text-white py-2 px-6 rounded-full hover:bg-pink-700 transition"
+            className="
+              bg-pink-600
+              text-white
+              py-2
+              px-6
+              rounded-full
+              hover:bg-pink-700
+              active:scale-95
+              transition-all
+            "
           >
             🎂 It's time to cut the cake
           </button>
         </div>
       </div>
 
-      {/* Modal for memory details */}
+      {/* ═════════════════════════════════════
+          FULLSCREEN MEMORY PREVIEW
+      ═════════════════════════════════════ */}
+
       <AnimatePresence>
         {selected && (
           <motion.div
-            className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 cursor-pointer"
+            className="
+              fixed
+              inset-0
+              z-[100]
+              flex
+              items-center
+              justify-center
+              p-4
+              sm:p-6
+              bg-[#080512]/90
+              backdrop-blur-md
+              overflow-hidden
+              cursor-pointer
+            "
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
-            exit="hidden"
+            exit="exit"
             onClick={closeModal}
           >
+            {/* ─────────────────────────────
+                CLOSE BUTTON
+            ───────────────────────────── */}
+
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                closeModal();
+              }}
+              className="
+                absolute
+                top-5
+                right-5
+                sm:top-7
+                sm:right-7
+                z-[110]
+                w-11
+                h-11
+                rounded-full
+                bg-black/30
+                border
+                border-white/20
+                text-white
+                text-xl
+                flex
+                items-center
+                justify-center
+                backdrop-blur-md
+                hover:bg-white/10
+                hover:scale-105
+                active:scale-95
+                transition-all
+              "
+              aria-label="Close image preview"
+            >
+              ✕
+            </button>
+
+            {/* ─────────────────────────────
+                PREVIOUS BUTTON
+            ───────────────────────────── */}
+
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                previousMemory();
+              }}
+              className="
+                absolute
+                left-3
+                sm:left-6
+                md:left-10
+                z-[110]
+                w-11
+                h-11
+                sm:w-12
+                sm:h-12
+                rounded-full
+                bg-black/30
+                border
+                border-white/20
+                text-white
+                text-lg
+                flex
+                items-center
+                justify-center
+                backdrop-blur-md
+                hover:bg-white/10
+                hover:scale-105
+                active:scale-95
+                transition-all
+              "
+              aria-label="Previous memory"
+            >
+              ←
+            </button>
+
+            {/* ─────────────────────────────
+                NEXT BUTTON
+            ───────────────────────────── */}
+
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                nextMemory();
+              }}
+              className="
+                absolute
+                right-3
+                sm:right-6
+                md:right-10
+                z-[110]
+                w-11
+                h-11
+                sm:w-12
+                sm:h-12
+                rounded-full
+                bg-black/30
+                border
+                border-white/20
+                text-white
+                text-lg
+                flex
+                items-center
+                justify-center
+                backdrop-blur-md
+                hover:bg-white/10
+                hover:scale-105
+                active:scale-95
+                transition-all
+              "
+              aria-label="Next memory"
+            >
+              →
+            </button>
+
+            {/* ─────────────────────────────
+                MEMORY CARD
+            ───────────────────────────── */}
+
             <motion.div
-              className="bg-white rounded-2xl p-4 max-w-md w-full mx-4 overflow-auto relative"
-              variants={modalVariants}
+              variants={cardVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
+              onClick={(event) => event.stopPropagation()}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              className="w-full max-w-[390px] flex justify-center"
             >
-              <img
-                src={selected.img}
-                alt={selected.title}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-auto object-cover rounded-xl mb-4 cursor-pointer"
-              />
-              <h2 className="text-xl font-bold mb-2 text-center">{selected.title}</h2>
-              <p className="text-gray-700 mb-4 text-center">{selected.text}</p>
-              {selected.isLast && (
-                <button
-                  onClick={(e) => { e.stopPropagation(); goToCakeFromModal(); }}
-                  className="w-full bg-pink-600 text-white py-2 rounded-lg mt-2 hover:bg-pink-700 transition"
-                >
-                  🎂 It's time to cut the cake
-                </button>
-              )}
-              <button
-                onClick={(e) => { e.stopPropagation(); closeModal(); }}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-                aria-label="Close"
+              {/* TILTING MEMORY CARD */}
+              <div
+                className="
+      relative
+      w-full
+      max-h-[88vh]
+      bg-[#f4efdf]
+      rounded-[18px]
+      p-[10px]
+      pb-[18px]
+      border
+      border-white/70
+      shadow-[0_25px_70px_rgba(0,0,0,0.45)]
+      flex
+      flex-col
+      animate-[modalTilt_4s_ease-in-out_infinite]
+    "
               >
-                ✕
-              </button>
+                {/* IMAGE */}
+                <div
+                  className="
+        relative
+        w-full
+        h-[55vh]
+        sm:h-[58vh]
+        max-h-[560px]
+        rounded-[13px]
+        overflow-hidden
+        bg-[#e8e0cd]
+        flex
+        items-center
+        justify-center
+      "
+                >
+                  {/* Loading shimmer */}
+                  {!imageLoaded && (
+                    <div className="absolute inset-0 overflow-hidden bg-[#e8e0cd]">
+                      <div className="absolute inset-0 shimmer-preview" />
+
+                      <style>{`
+            @keyframes preview-shimmer {
+              0% {
+                transform: translateX(-100%);
+              }
+
+              100% {
+                transform: translateX(100%);
+              }
+            }
+
+            .shimmer-preview {
+              width: 60%;
+              height: 100%;
+              background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.45),
+                transparent
+              );
+              animation: preview-shimmer 1.4s infinite;
+            }
+          `}</style>
+                    </div>
+                  )}
+
+                  {/* IMAGE */}
+                  <img
+                    key={selected.img}
+                    src={selected.img}
+                    alt={selected.title}
+                    decoding="async"
+                    onLoad={() => setImageLoaded(true)}
+                    draggable={false}
+                    className="
+          w-full
+          h-full
+          object-contain
+          select-none
+          transition-opacity
+          duration-300
+        "
+                    style={{
+                      opacity: imageLoaded ? 1 : 0,
+                    }}
+                  />
+                </div>
+
+                {/* TITLE */}
+                <div className="text-center px-3 pt-4">
+                  <h2
+                    className="
+          text-[#5c4a68]
+          text-[18px]
+          sm:text-[20px]
+          font-semibold
+          leading-tight
+        "
+                  >
+                    {selected.title}
+                  </h2>
+                </div>
+
+                {/* DESCRIPTION */}
+                <div
+                  className="
+        text-center
+        px-4
+        pt-2
+        pb-1
+      "
+                >
+                  <p
+                    className="
+          text-[#6b5876]
+          text-[14px]
+          sm:text-[15px]
+          italic
+          leading-relaxed
+        "
+                  >
+                    {selected.text}
+                  </p>
+                </div>
+              </div>
+
+              {/* TILT ANIMATION */}
+              <style>{`
+    @keyframes modalTilt {
+      0%,
+      100% {
+        transform: rotate(-1.2deg);
+      }
+
+      50% {
+        transform: rotate(1.2deg);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .animate-\\[modalTilt_4s_ease-in-out_infinite\\] {
+        animation: none !important;
+      }
+    }
+  `}</style>
             </motion.div>
+            {/* ─────────────────────────────
+                DOTS
+            ───────────────────────────── */}
+
+            <div
+              className="
+                absolute
+                bottom-5
+                left-1/2
+                -translate-x-1/2
+                flex
+                items-center
+                gap-[7px]
+              "
+            >
+              {memories.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setSelectedIndex(index);
+                    setImageLoaded(false);
+                  }}
+                  className={`
+                    h-[7px]
+                    rounded-full
+                    transition-all
+                    duration-300
+                    ${
+                      selectedIndex === index
+                        ? "w-[26px] bg-[#e8b83f]"
+                        : "w-[7px] bg-white/30 hover:bg-white/50"
+                    }
+                  `}
+                  aria-label={`View memory ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* ─────────────────────────────
+                CAKE BUTTON
+            ───────────────────────────── */}
+
+            {selected.isLast && (
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  goToCakeFromModal();
+                }}
+                className="
+                  absolute
+                  bottom-14
+                  left-1/2
+                  -translate-x-1/2
+                  bg-[#f4b942]
+                  text-[#39251f]
+                  font-semibold
+                  px-6
+                  py-2.5
+                  rounded-full
+                  shadow-lg
+                  hover:scale-105
+                  active:scale-95
+                  transition-all
+                "
+              >
+                🎂 It's time to cut the cake
+              </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

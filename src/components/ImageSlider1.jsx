@@ -1,47 +1,25 @@
-import { useEffect, useRef, useState, useCallback, useMemo, lazy, Suspense } from "react";
+import { useEffect, useState, useCallback, useMemo, lazy, Suspense } from "react";
 import ImageSlider from "../components/common/ImageSlider";
-import musicFile from "../assets/music.mp3";
 import CurtainIntro from "./CurtainIntro";
-import bgPhone from "../assets/Anuj/bgPhone.png";
+import Background from "./Background";
+import { useMusic } from "../context/MusicContext";
 import { motion } from "framer-motion";
 
 /* Lazy load Page2Slider – not needed until user navigates to page 2 */
 const Page2Slider = lazy(() => import("../components/common/Page2Slider"));
 
-/* ---------- Emoji arrays – kept separate per user requirement ---------- */
-const EmojiForBG = [
-  "❤️", "💖", "💕", "💗", "💓", "💞",
-  "💝", "🩷", "🌸", "🌺", "🦋", "🎀",
-];
+/* ---------- Emoji array for the one-time celebration blast ---------- */
 const EmojiForBlast = [
   "💖", "💝", "🥰", "✨", "⭐", "🌟",
   "💫", "🌸", "🌺", "💐", "🦋", "🎉", "🎊",
 ];
 
-/* ---------- CSS for heart rain – extracted to a constant to avoid re-creation ---------- */
-const HEART_STYLE = `
-  .heart {
-    position: absolute;
-    bottom: -30px;
-    font-size: 30px;
-    will-change: transform, opacity;
-    contain: layout style paint;
-    animation: floatUp linear forwards;
-  }
-  @keyframes floatUp {
-    to {
-      transform: translate3d(0, -110vh, 0) scale(1.5);
-      opacity: 0;
-    }
-  }
-`;
-
 /**
- * Pre-generate blast emoji data once (not on every trigger).
- * Returns a function that generates the array so each trigger gets new random values.
+ * Pre-generate blast emoji data.
+ * Called once per trigger — each call produces new random values.
  */
 function generateBlastEmojis() {
-  const total = 80; // reduced from 251 for performance
+  const total = 80;
   const arr = [];
   const vh = window.innerHeight;
   for (let i = 0; i < total; i++) {
@@ -71,7 +49,6 @@ function generateBlastEmojis() {
       rotateStart,
       rotateEnd,
       endY: vh + 200,
-      // Pre-compute style object to avoid re-creation in render
       style: {
         fontSize: `${size}px`,
         opacity,
@@ -88,8 +65,7 @@ function generateBlastEmojis() {
 }
 
 /**
- * EmojiBlast – renders a burst of emojis from the top left & right corners.
- * Optimized: reduced count, pre-computed styles, will-change hints, contain.
+ * EmojiBlast – one-time burst of emojis from the top corners.
  */
 function EmojiBlast({ trigger }) {
   const [emojis, setEmojis] = useState([]);
@@ -97,7 +73,6 @@ function EmojiBlast({ trigger }) {
   useEffect(() => {
     if (!trigger) return;
     setEmojis(generateBlastEmojis());
-    // Cleanup after longest possible animation (duration 4s + delay 2.5s + buffer)
     const timer = setTimeout(() => setEmojis([]), 7000);
     return () => clearTimeout(timer);
   }, [trigger]);
@@ -131,24 +106,18 @@ function EmojiBlast({ trigger }) {
   );
 }
 
-/* Max concurrent heart DOM elements to prevent memory bloat on low-end devices */
-const MAX_HEARTS = 15;
-
-export default function ForManisha() {
-  const effectsRef = useRef(null);
-  const musicRef = useRef(null);
-  const heartCountRef = useRef(0);
+export default function ImageSlider1() {
+  const { toggleMusic, isPlaying } = useMusic();
 
   const [page, setPage] = useState(1);
   const [curtainOpen, setCurtainOpen] = useState(false);
-  const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
   const [showBtn, setShowBtn] = useState(false);
   const [showStory, setShowStory] = useState(false);
   const [hasBlasted, setHasBlasted] = useState(false);
   const [emojiTrigger, setEmojiTrigger] = useState(false);
 
-  /* COUNTDOWN – uses refs to avoid unnecessary object allocations */
+  /* COUNTDOWN */
   useEffect(() => {
     const target = new Date("2026-01-26T00:00:00").getTime();
     const timer = setInterval(() => {
@@ -168,36 +137,6 @@ export default function ForManisha() {
     return () => clearInterval(timer);
   }, []);
 
-  /* Heart rain – optimized: uses translate3d, capped DOM count, will-change */
-  const heartRain = useCallback(() => {
-    if (!effectsRef.current) return;
-    if (heartCountRef.current >= MAX_HEARTS) return; // cap concurrent hearts
-
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = EmojiForBG[Math.floor(Math.random() * EmojiForBG.length)];
-    heart.style.left = Math.random() * 100 + "%";
-    heart.style.animationDuration = 3 + Math.random() * 3 + "s";
-    heart.style.fontSize = 20 + Math.random() * 30 + "px";
-    heart.style.opacity = 0.5 + Math.random() * 0.5;
-
-    heartCountRef.current++;
-    effectsRef.current.appendChild(heart);
-
-    // Remove after animation completes
-    const removeTime = 6500; // slightly longer than max animation
-    setTimeout(() => {
-      heart.remove();
-      heartCountRef.current--;
-    }, removeTime);
-  }, []);
-
-  useEffect(() => {
-    if (!curtainOpen) return;
-    const interval = setInterval(heartRain, 1000);
-    return () => clearInterval(interval);
-  }, [curtainOpen, heartRain]);
-
   // Trigger emoji blast after curtains are open and button appears
   useEffect(() => {
     if (showBtn && curtainOpen && !hasBlasted) {
@@ -205,26 +144,6 @@ export default function ForManisha() {
       setHasBlasted(true);
     }
   }, [showBtn, curtainOpen, hasBlasted]);
-
-  // Music handling
-  useEffect(() => {
-    if (!curtainOpen) return;
-    const audio = musicRef.current;
-    if (!audio) return;
-    audio.play().then(() => setPlaying(true)).catch(() => {});
-  }, [curtainOpen]);
-
-  const toggleMusic = useCallback(() => {
-    const audio = musicRef.current;
-    if (!audio) return;
-    if (audio.paused) {
-      audio.play();
-      setPlaying(true);
-    } else {
-      audio.pause();
-      setPlaying(false);
-    }
-  }, []);
 
   const handleCurtainOpen = useCallback(() => setCurtainOpen(true), []);
   const goToPage2 = useCallback(() => setPage(2), []);
@@ -256,18 +175,7 @@ export default function ForManisha() {
   );
 
   return (
-    <div
-      className="min-h-screen py-3 text-white overflow-x-hidden relative bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${bgPhone})` }}
-    >
-      {/* Optimized heart rain CSS – uses translate3d + will-change + contain */}
-      <style>{HEART_STYLE}</style>
-      <div
-        ref={effectsRef}
-        className="fixed inset-0 pointer-events-none z-50"
-        style={{ contain: "layout style paint" }}
-      />
-
+    <Background>
       {/* Curtain – appears first */}
       {!curtainOpen && (
         <div className="fixed inset-0 z-[9999]">
@@ -278,23 +186,21 @@ export default function ForManisha() {
       {/* Emoji celebration – only after curtain opens */}
       {curtainOpen && <EmojiBlast trigger={emojiTrigger} />}
 
-      {/* 🎵 audio – preload metadata only */}
-      <audio ref={musicRef} src={musicFile} loop preload="metadata" />
-      {/* 🎵 music button */}
+      {/* 🎵 music button – uses global MusicContext */}
       <button
         onClick={toggleMusic}
         className={`fixed bottom-4 right-4 px-6 py-3 rounded-full font-semibold z-50 ${
-          playing ? "bg-pink-200 text-pink-700" : "bg-white text-pink-600"
+          isPlaying ? "bg-pink-200 text-pink-700" : "bg-white text-pink-600"
         }`}
       >
-        {playing ? "⏸️" : "🎵"}
+        {isPlaying ? "⏸️" : "🎵"}
       </button>
 
       {/* Main content – only visible after curtain is opened */}
       {curtainOpen && (
         <>
           {page === 1 && (
-            <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center z-10">
+            <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center z-10 py-3">
               <ImageSlider />
               <h1 className="text-5xl font-bold mb-2">PRATYUSH 😎</h1>
               <p className="opacity-90 mb-6">Something special is coming…</p>
@@ -327,6 +233,6 @@ export default function ForManisha() {
           )}
         </>
       )}
-    </div>
+    </Background>
   );
 }

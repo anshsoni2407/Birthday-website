@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, useRef, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import bgPhone from "../assets/Anuj/bgPhone.png";
+import Background from "./Background";
 
 /* ---------- Floating heart data (pre-computed, same style as Envelope) ---------- */
 const HEARTS = Array.from({ length: 14 }).map((_, i) => ({
@@ -86,12 +86,8 @@ const DateLocker = memo(() => {
   );
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center relative overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${bgPhone})` }}
-    >
-      {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-black/40" />
+    <Background overlay="bg-black/40">
+      <div className="min-h-dvh flex items-center justify-center relative overflow-hidden">
 
       {/* Floating hearts ambience */}
       {heartElements}
@@ -330,7 +326,8 @@ const DateLocker = memo(() => {
           animation: shake 0.5s ease-in-out;
         }
       `}</style>
-    </div>
+      </div>
+    </Background>
   );
 });
 
