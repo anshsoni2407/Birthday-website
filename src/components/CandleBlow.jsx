@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import Background from "../components/Background";
+import { useMusic } from "../context/MusicContext";
 
 /* ──────────────────────────────────────
    MIC METER COLORS
@@ -31,13 +33,97 @@ const getGlowColor = (v) => {
 };
 
 /* ──────────────────────────────────────
+   EMOJI BLAST — celebration on successful blow
+────────────────────────────────────── */
+
+const EmojiForBlast = [
+  "💖", "💝", "🥰", "✨", "⭐", "🌟",
+  "💫", "🌸", "🌺", "💐", "🦋", "🎉", "🎊",
+];
+
+function generateBlastEmojis() {
+  const total = 80;
+  const arr = [];
+  const vh = window.innerHeight;
+  for (let i = 0; i < total; i++) {
+    const char = EmojiForBlast[Math.floor(Math.random() * EmojiForBlast.length)];
+    const fromLeft = Math.random() < 0.5;
+    arr.push({
+      id: i,
+      char,
+      startX: fromLeft ? -30 : 30,
+      startY: -30,
+      driftX: (Math.random() - 0.5) * 200,
+      duration: 2 + Math.random() * 2,
+      delay: Math.random() * 2.5,
+      rotateStart: Math.random() * 360,
+      rotateEnd: Math.random() * 360 + (Math.random() * 720 - 360),
+      endY: vh + 200,
+      style: {
+        fontSize: `${16 + Math.random() * 24}px`,
+        opacity: 0.6 + Math.random() * 0.4,
+        position: "absolute",
+        left: fromLeft ? 0 : "auto",
+        right: fromLeft ? "auto" : 0,
+        top: -30,
+        willChange: "transform, opacity",
+        contain: "layout style paint",
+      },
+    });
+  }
+  return arr;
+}
+
+function EmojiBlast({ trigger }) {
+  const [emojis, setEmojis] = useState([]);
+
+  useEffect(() => {
+    if (!trigger) return;
+    setEmojis(generateBlastEmojis());
+    const timer = setTimeout(() => setEmojis([]), 7000);
+    return () => clearTimeout(timer);
+  }, [trigger]);
+
+  if (emojis.length === 0) return null;
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[9000]" style={{ contain: "layout style paint" }}>
+      {emojis.map((e) => (
+        <motion.div
+          key={e.id}
+          className="select-none"
+          style={e.style}
+          initial={{ x: e.startX, y: e.startY, rotate: e.rotateStart }}
+          animate={{
+            x: e.startX + e.driftX,
+            y: e.endY,
+            rotate: e.rotateEnd,
+            opacity: 0,
+          }}
+          transition={{
+            duration: e.duration,
+            ease: "easeOut",
+            delay: e.delay,
+          }}
+        >
+          {e.char}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────
    CANDLE BLOW
 ────────────────────────────────────── */
 
 const CandleBlow = memo(() => {
+  const { pauseMusic } = useMusic();
+
   const [stage, setStage] = useState("before");
   const [listening, setListening] = useState(false);
   const [micStrength, setMicStrength] = useState(0);
+  const [blastTrigger, setBlastTrigger] = useState(false);
 
   const blownRef = useRef(false);
 
@@ -158,6 +244,7 @@ const CandleBlow = memo(() => {
       setListening(false);
       setMicStrength(0);
       setStage("blowing");
+      setBlastTrigger(true);
 
       /* Clear any previous timer */
 
@@ -285,7 +372,10 @@ const CandleBlow = memo(() => {
     setStage("before");
     setListening(false);
     setMicStrength(0);
-  }, []);
+
+    /* Auto-pause background music when entering cake section */
+    pauseMusic();
+  }, [pauseMusic]);
 
   /* ──────────────────────────────────────
      COMPLETE CLEANUP
@@ -337,6 +427,9 @@ const CandleBlow = memo(() => {
 
   return (
     <Background overlay="bg-black/10">
+      {/* Celebration blast — triggers once on successful blow */}
+      <EmojiBlast trigger={blastTrigger} />
+
       <div
         className="
           min-h-dvh
@@ -628,7 +721,7 @@ const CandleBlow = memo(() => {
                 transition-all
               "
             >
-              🎊 Another Surprise 🎊
+              Another Surprise 🎊
             </button>
           </>
         )}

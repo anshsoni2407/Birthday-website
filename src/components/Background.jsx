@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import bgPhone from "../assets/Anuj/bgPhone.png";
 
 /* ─────────────────────────────────────────────
-   EMOJI DATA
+   EMOJI DATA — background decorations
 ───────────────────────────────────────────── */
 
 const EmojiForBG = ["💖", "💕", "💞", "💝", "💖", "🦋"];
@@ -11,165 +11,97 @@ const EMOJI_COUNT = 6;
 
 const EMOJI_ITEMS = Array.from({ length: EMOJI_COUNT }, (_, i) => ({
   id: i,
-
   char: EmojiForBG[i % EmojiForBG.length],
-
-  /* Natural screen distribution */
   left: `${((i * 19 + 5) % 94) + 3}%`,
   top: `${((i * 31 + 8) % 88) + 4}%`,
-
-  /* Emoji size */
   size: 28 + (i % 5) * 4,
-
-  /*
-      Longer durations = smoother movement.
-      Avoid very short animations because they
-      can look jittery.
-    */
   duration: 5.5 + (i % 4) * 1.2,
-
-  /* Stagger animation start */
   delay: (i * 0.8) % 5,
-
-  /*
-      Slightly different floating distance
-      for each emoji.
-    */
   floatDistance: 8 + (i % 4) * 3,
 }));
 
 /* ─────────────────────────────────────────────
-   SMOOTH EMOJI ANIMATION
+   FLOATING HEARTS — moved from Envelope.jsx
 ───────────────────────────────────────────── */
 
-const EMOJI_BG_STYLES = `
-  /*
-    Smooth floating animation.
+const HEART_COUNT = 10;
 
-    Important:
-    - translate3d() instead of translateY()
-    - No aggressive scale changes
-    - No rotation
-    - Slow movement
-    - Smooth opacity breathing
-  */
+const HEART_ITEMS = Array.from({ length: HEART_COUNT }, (_, i) => ({
+  id: i,
+  left: `${5 + ((i * 9.5) % 90)}%`,
+  size: 14 + (i % 4) * 3,
+  delay: (i * 1.1) % 8,
+  duration: 8 + (i % 5) * 2,
+}));
 
+/* ─────────────────────────────────────────────
+   CSS ANIMATIONS
+───────────────────────────────────────────── */
+
+const BG_STYLES = `
+  /* ── Emoji breathing float ──────────────── */
   @keyframes emoji-float-smooth {
-
-    0% {
-      transform: translate3d(0, 8px, 0);
-      opacity: 0.35;
-    }
-
-    25% {
-      transform: translate3d(0, 3px, 0);
-      opacity: 0.48;
-    }
-
-    50% {
-      transform: translate3d(0, -8px, 0);
-      opacity: 0.65;
-    }
-
-    75% {
-      transform: translate3d(0, -3px, 0);
-      opacity: 0.48;
-    }
-
-    100% {
-      transform: translate3d(0, 8px, 0);
-      opacity: 0.35;
-    }
+    0%   { transform: translate3d(0,  8px, 0); opacity: 0.35; }
+    25%  { transform: translate3d(0,  3px, 0); opacity: 0.48; }
+    50%  { transform: translate3d(0, -8px, 0); opacity: 0.65; }
+    75%  { transform: translate3d(0, -3px, 0); opacity: 0.48; }
+    100% { transform: translate3d(0,  8px, 0); opacity: 0.35; }
   }
 
-
   .emoji-bg-item {
-
     position: absolute;
-
     pointer-events: none;
-
     user-select: none;
-
-    /*
-      GPU compositing.
-      Helps keep the animation smooth.
-    */
     transform: translate3d(0, 0, 0);
-
-    /*
-      Only animate properties that actually change.
-    */
     animation-name: emoji-float-smooth;
-
     animation-timing-function: ease-in-out;
-
     animation-iteration-count: infinite;
-
     animation-fill-mode: both;
-
-    /*
-      Tell browser these properties will animate.
-    */
     will-change: transform, opacity;
-
-    /*
-      Prevent weird sub-pixel rendering.
-    */
     backface-visibility: hidden;
-
     -webkit-backface-visibility: hidden;
-
-    /*
-      Keep emoji centered while moving.
-    */
     transform-origin: center center;
-
-    /*
-      Prevent text selection/highlight.
-    */
     -webkit-user-select: none;
-
-    /*
-      Prevent touch interaction.
-    */
     touch-action: none;
   }
 
-
-  /*
-    Mobile devices:
-    Keep animation subtle because mobile GPUs
-    have less available rendering power.
-  */
-
-  @media (max-width: 640px) {
-
-    .emoji-bg-item {
-      animation-timing-function: ease-in-out;
-    }
-
+  /* ── Floating hearts — rise gently ─────── */
+  @keyframes heart-rise {
+    0%   { transform: translate3d(0, 0, 0) scale(1);   opacity: 0; }
+    10%  { opacity: 0.6; }
+    50%  { transform: translate3d(6px, -45vh, 0) scale(1.05); opacity: 0.75; }
+    100% { transform: translate3d(-4px, -95vh, 0) scale(0.9); opacity: 0; }
   }
 
+  .heart-bg-item {
+    position: absolute;
+    bottom: -30px;
+    pointer-events: none;
+    user-select: none;
+    animation-name: heart-rise;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -webkit-user-select: none;
+    touch-action: none;
+    filter: drop-shadow(0 0 6px rgba(244,114,182,0.3));
+  }
 
-  /*
-    Accessibility:
-    Disable animation when user has requested
-    reduced motion.
-  */
-
+  /* ── Accessibility ─────────────────────── */
   @media (prefers-reduced-motion: reduce) {
-
     .emoji-bg-item {
-
       animation: none !important;
-
       opacity: 0.4 !important;
-
       transform: translate3d(0, 0, 0) !important;
-
     }
-
+    .heart-bg-item {
+      animation: none !important;
+      opacity: 0.3 !important;
+      transform: translate3d(0, -40vh, 0) !important;
+    }
   }
 `;
 
@@ -178,36 +110,42 @@ const EMOJI_BG_STYLES = `
 ───────────────────────────────────────────── */
 
 export default function Background({ overlay, children }) {
-  /*
-    Emoji elements are static.
-    They don't need to be recreated on every render.
-  */
-
   const emojiElements = useMemo(
     () =>
-      EMOJI_ITEMS.map((emoji) => (
+      EMOJI_ITEMS.map((e) => (
         <span
-          key={emoji.id}
+          key={`emoji-${e.id}`}
           className="emoji-bg-item"
           style={{
-            left: emoji.left,
-            top: emoji.top,
-
-            fontSize: `${emoji.size}px`,
-
-            /*
-              Different speed for each emoji.
-            */
-            animationDuration: `${emoji.duration}s`,
-
-            /*
-              Different starting point.
-            */
-            animationDelay: `${emoji.delay}s`,
+            left: e.left,
+            top: e.top,
+            fontSize: `${e.size}px`,
+            animationDuration: `${e.duration}s`,
+            animationDelay: `${e.delay}s`,
           }}
           aria-hidden="true"
         >
-          {emoji.char}
+          {e.char}
+        </span>
+      )),
+    [],
+  );
+
+  const heartElements = useMemo(
+    () =>
+      HEART_ITEMS.map((h) => (
+        <span
+          key={`heart-${h.id}`}
+          className="heart-bg-item"
+          style={{
+            left: h.left,
+            fontSize: `${h.size}px`,
+            animationDuration: `${h.duration}s`,
+            animationDelay: `${h.delay}s`,
+          }}
+          aria-hidden="true"
+        >
+          ❤️
         </span>
       )),
     [],
@@ -215,53 +153,20 @@ export default function Background({ overlay, children }) {
 
   return (
     <div
-      className="
-        relative
-        min-h-dvh
-        w-full
-        overflow-x-hidden
-        bg-cover
-        bg-center
-        bg-no-repeat
-        text-white
-      "
-      style={{
-        backgroundImage: `url(${bgPhone})`,
-      }}
+      className="relative min-h-dvh w-full overflow-x-hidden bg-cover bg-center bg-no-repeat text-white"
+      style={{ backgroundImage: `url(${bgPhone})` }}
     >
-      {/* Emoji animation styles */}
+      <style>{BG_STYLES}</style>
 
-      <style>{EMOJI_BG_STYLES}</style>
+      {overlay && <div className={`absolute inset-0 ${overlay}`} aria-hidden="true" />}
 
-      {/* Optional overlay */}
-
-      {overlay && (
-        <div
-          className={`
-            absolute
-            inset-0
-            ${overlay}
-          `}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Animated emoji background */}
-
-      <div
-        className="
-          absolute
-          inset-0
-          pointer-events-none
-          overflow-hidden
-        "
-        aria-hidden="true"
-      >
+      {/* Decorative layers — behind content */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         {emojiElements}
+        {heartElements}
       </div>
 
-      {/* Main content */}
-
+      {/* Page content */}
       <div className="relative z-10">{children}</div>
     </div>
   );

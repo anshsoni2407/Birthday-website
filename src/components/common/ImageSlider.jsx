@@ -1,50 +1,82 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from "react";
 
-import ps1 from "../../assets/Anuj/ps1.jpeg";
-import ps2 from "../../assets/Anuj/ps2.jpeg";
-import ps3 from "../../assets/Anuj/ps3.jpeg";
-import ps4 from "../../assets/Anuj/ps4.jpeg";
-import ps5 from "../../assets/Anuj/ps5.jpeg";
-import ps6 from "../../assets/Anuj/ps6.jpeg";
-import ps7 from "../../assets/Anuj/ps7.jpeg";
-import ps8 from "../../assets/Anuj/ps8.jpeg";
+import s1 from "../../assets/images/s1.jpeg";
+import s2 from "../../assets/images/s2.jpeg";
+import s3 from "../../assets/images/s3.jpeg";
+import s4 from "../../assets/images/s4.jpeg";
+import s5 from "../../assets/images/s5.jpeg";
+import s6 from "../../assets/images/s6.jpeg";
+import s7 from "../../assets/images/s7.jpeg";
+import s8 from "../../assets/images/s8.jpeg";
+import s11 from "../../assets/images/s11.jpeg";
+import s12 from "../../assets/images/s12.jpeg";
+import s13 from "../../assets/images/s13.jpeg";
+import s14 from "../../assets/images/s14.jpeg";
+import s15 from "../../assets/images/s15.jpeg";
+import s16 from "../../assets/images/s16.jpeg";
 
 /* ─────────────────────────────────────────────
    SLIDE DATA
 ───────────────────────────────────────────── */
-
 const slides = [
   {
-    img: ps2,
-    text: "Tumhari ye muskaan hi mera sabse bada gift hai 💖",
+    img: s5,
+    text: "Your smile is the most beautiful thing my eyes could ever find 💖",
   },
   {
-    img: ps1,
-    text: "Tum mere liye kisi dua se kam nahi ho 💫❤️",
+    img: s1,
+    text: "There is something about you that makes my heart fall for you a little more every day 💫❤️",
   },
   {
-    img: ps3,
-    text: "Har rang tum pe jachta hai 💕",
+    img: s3,
+    text: "You look beautiful in every color, but somehow, you make every color look beautiful too 💕",
   },
   {
-    img: ps4,
-    text: "You make my heart skip a beat ❤️",
+    img: s4,
+    text: "Your eyes have a way of making me forget everything around me ❤️",
   },
   {
-    img: ps5,
-    text: "You are my all of today and all of my tomorrow 💞",
+    img: s2,
+    text: "You are the kind of beautiful that words will never be enough to describe 💞",
   },
   {
-    img: ps6,
-    text: "You are my happy place 🌸",
+    img: s6,
+    text: "Being around you feels like my favorite place in the whole world 🌸",
   },
   {
-    img: ps7,
-    text: "I pick you, always and forever ♾️❤️",
+    img: s7,
+    text: "If beauty had a name, I think it would sound a lot like yours ♾️❤️",
   },
   {
-    img: ps8,
-    text: "My world in a picture 🌍💖",
+    img: s8,
+    text: "Every picture of you becomes my new favorite picture of you 🌍💖",
+  },
+  {
+    img: s11,
+    text: "If I had to choose one view to never get tired of, it would probably be you 💖",
+  },
+  {
+    img: s12,
+    text: "If I had to choose one view to never get tired of, it would probably be you 💖",
+  },
+
+  // New slides
+
+  {
+    img: s13,
+    text: "Some moments become special simply because you are the one in them 🌸💖",
+  },
+  {
+    img: s14,
+    text: "You have this effortless way of turning an ordinary moment into something unforgettable 💫",
+  },
+  {
+    img: s15,
+    text: "There is a warmth in your presence that makes everything around you feel a little brighter ☀️❤️",
+  },
+  {
+    img: s16,
+    text: "No matter how many pictures I see, somehow you still manage to surprise me with how beautiful you are 🥰",
   },
 ];
 

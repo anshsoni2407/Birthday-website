@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { MusicProvider } from "./context/MusicContext";
+import DraggableMusicButton from "./components/DraggableMusicButton";
 import ImageSlider1 from "./components/ImageSlider1";
 import DateLocker from "./components/DateLocker.jsx";
 
@@ -12,6 +13,9 @@ const App = () => {
   return (
     <BrowserRouter>
       <MusicProvider>
+        {/* Global draggable music button — visible on every page */}
+        <DraggableMusicButton />
+
         <Suspense
           fallback={
             <div
@@ -27,7 +31,6 @@ const App = () => {
             <Route path="/candleBlow" element={<CandleBlow />} />
             <Route path="*" element={<NavigationPage />} />
             <Route path="/date-lock" element={<DateLocker />} />
-           
             <Route path="/env" element={<EnvelopeComponent />} />
           </Routes>
         </Suspense>

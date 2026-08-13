@@ -2,7 +2,6 @@ import React, {
   useState,
   useEffect,
   useCallback,
-  useMemo,
   useRef,
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,18 +12,6 @@ import Background from "./Background";
 import EnvelopeClosed from "../assets/Env.png";
 import EnvelopeOpened from "../assets/openEnv.png";
 import LetterImg from "../assets/letter.jpg";
-
-/* ─────────────────────────────────────────────
-   FLOATING HEART DATA
-───────────────────────────────────────────── */
-
-const HEARTS = Array.from({ length: 12 }, (_, i) => ({
-  id: i,
-  left: 5 + Math.random() * 90,
-  size: 14 + Math.random() * 10,
-  delay: Math.random() * 5,
-  duration: 7 + Math.random() * 4,
-}));
 
 /* ─────────────────────────────────────────────
    STAGE ANIMATIONS
@@ -263,66 +250,11 @@ export default function Envelope() {
   }, [clearTimers]);
 
   /* ─────────────────────────────────────────
-     FLOATING HEARTS
-  ───────────────────────────────────────── */
-
-  const heartElements = useMemo(() => {
-    return HEARTS.map((heart) => (
-      <motion.span
-        key={heart.id}
-        className="
-          absolute
-          pointer-events-none
-          select-none
-          text-pink-300
-          drop-shadow-[0_0_8px_rgba(244,114,182,0.35)]
-        "
-        style={{
-          left: `${heart.left}%`,
-          bottom: "-30px",
-          fontSize: `${heart.size}px`,
-          willChange: "transform, opacity",
-        }}
-        animate={{
-          y: [-10, -700],
-          opacity: [0, 0.75, 0],
-          x: [0, 8, -5, 0],
-        }}
-        transition={{
-          duration: heart.duration,
-          delay: heart.delay,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        aria-hidden="true"
-      >
-        ❤️
-      </motion.span>
-    ));
-  }, []);
-
-  /* ─────────────────────────────────────────
      UI
   ───────────────────────────────────────── */
 
   return (
     <Background overlay="bg-black/10">
-      {/* ─────────────────────────────────────
-          DECORATIVE HEART LAYER
-      ───────────────────────────────────── */}
-
-      <div
-        className="
-          fixed
-          inset-0
-          z-[1]
-          pointer-events-none
-          overflow-hidden
-        "
-        aria-hidden="true"
-      >
-        {heartElements}
-      </div>
 
       {/* ─────────────────────────────────────
           MAIN CONTENT

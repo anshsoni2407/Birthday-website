@@ -150,10 +150,6 @@ const Page2Slider = memo(({ showStory }) => {
      NAVIGATION
   ───────────────────────────────────────── */
 
-  const goBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
-
   const goToCake = useCallback(() => {
     navigate("/candleBlow");
   }, [navigate]);
@@ -283,64 +279,66 @@ const Page2Slider = memo(({ showStory }) => {
   return (
     <div
       className={`
-        ${showStory ? "opacity-100 scale-100" : "opacity-0 scale-95"}
-        transition-all
-        duration-500
-        ease-out
-        flex
-        flex-col
-        min-h-screen
-        w-full
-        max-w-2xl
-        mx-auto
-      `}
+    ${showStory ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+    relative
+    my-10
+    mx-auto
+    flex
+    min-h-screen
+    w-full
+    max-w-2xl
+    flex-col
+    rounded-[22px]
+    border-2
+    border-[#F4EFDF]/90
+    bg-black/5
+    shadow-[0_10px_40px_rgba(0,0,0,0.15)]
+    backdrop-blur-[2px]
+    transition-all
+    duration-500
+    ease-out
+  `}
     >
       {/* ─────────────────────────────────────
-          HEADER
-      ───────────────────────────────────── */}
+      FLOATING HEADER / GALLERY TITLE
+  ───────────────────────────────────── */}
 
       <header
         className="
-          w-full
-          flex
-          items-center
-          justify-between
-          p-4
-        "
+      pointer-events-none
+      absolute
+      left-1/2
+      top-0
+      z-20
+      flex
+      w-full
+      -translate-x-1/2
+      -translate-y-1/2
+      items-center
+      justify-center
+    "
       >
-        <button
-          onClick={goBack}
-          className="
-            w-10
-            h-10
-            rounded-full
-            border
-            border-white/20
-            bg-black/10
-            text-white
-            text-xl
-            flex
-            items-center
-            justify-center
-            hover:bg-white/10
-            transition
-          "
-          aria-label="Back"
-        >
-          ←
-        </button>
-
         <h1
           className="
-            text-white
-            text-lg
-            font-semibold
-          "
+        whitespace-nowrap
+        rounded-full
+        border
+        border-[#F4EFDF]
+        bg-[#F4EFDF]
+        px-10
+        py-1.5
+        text-center
+        text-sm
+        font-semibold
+        tracking-wide
+        text-black
+        shadow-[0_4px_15px_rgba(0,0,0,0.12)]
+        sm:px-8
+        sm:text-base
+      "
         >
           Memories Gallery 💖
         </h1>
-
-        <div className="w-10" />
       </header>
 
       {/* ─────────────────────────────────────
