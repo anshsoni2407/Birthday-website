@@ -1,21 +1,23 @@
-import React from 'react'
-import sparkle from '../../public/bg/birthday-12378_256.gif'
-import heart from "../../public/bg/birthday-12378_256.gif";
-
+import React from "react";
 
 const NavigationPage = () => {
   return (
-    <div className="fixed w-full bg-[#ca96b3] h-full">
+    <div className="fixed inset-0 w-full h-full bg-[#ca96b3] overflow-hidden">
       <div
-        className="h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${sparkle})` }}
-      ></div>
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/bg/birthday-12378_256.gif')",
+        }}
+      />
+
       <div
-        className="h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${heart})` }}
-      ></div>
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/bg/birthday-12378_256.gif')",
+        }}
+      />
     </div>
   );
-}
+};
 
-export default NavigationPage
+export default NavigationPage;
