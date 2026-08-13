@@ -13,7 +13,7 @@ const NavigationPage = () => {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/bg/birthday-12378_256.gif')",
+          backgroundImage: "url('/bg/bday.gif')",
         }}
       />
     </div>
