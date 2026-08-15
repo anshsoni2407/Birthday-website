@@ -121,17 +121,6 @@ const CURTAIN_STYLES = `
     100% { opacity: 0; }
   }
 
-  /* ── Reduced-motion: skip animations ──────────────────────── */
-  @media (prefers-reduced-motion: reduce) {
-    .curtain-btn-glow,
-    .curtain-open-left,
-    .curtain-open-right,
-    .curtain-btn-exit,
-    .curtain-line-exit {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-    }
-  }
 `;
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -173,10 +162,11 @@ const CurtainIntro = memo(({ onOpen }) => {
   useEffect(() => {
     if (!isOpening) return;
 
-    // Keep the curtain mounted for the full opening animation only.
+    // Leave a small paint buffer after the 1.8s slide before unmounting.
+    // This avoids cutting off the final animation frame on slower mobile browsers.
     const timer = setTimeout(() => {
       onOpen();
-    }, 1800);
+    }, 2300);
 
     return () => clearTimeout(timer);
   }, [isOpening, onOpen]);
