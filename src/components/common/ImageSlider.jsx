@@ -146,7 +146,7 @@ const ImageSlider = memo(() => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((previous) => (previous + 1) % slides.length);
-    }, 3500);
+    }, 7000);
 
     return () => clearInterval(timer);
   }, []);

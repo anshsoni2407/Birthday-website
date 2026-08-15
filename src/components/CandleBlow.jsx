@@ -471,7 +471,7 @@ const CandleBlow = memo(() => {
             animate-pulse
           "
         >
-          🎉 Happy Birthday 🎉
+          🎉 Happy Birthday Baby  🎉
         </h1>
 
         {/* ═══════════════════════════

@@ -362,7 +362,7 @@ function DateLock({ onUnlock }) {
             <>
               {/* Instruction */}
               <p className="mb-5 text-xs text-white/50">
-                Enter the special date to unlock 💝
+                Enter the date to unlock 💝
               </p>
 
               {/* Date Inputs */}
