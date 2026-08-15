@@ -733,8 +733,7 @@ export default function ImageSlider1() {
           MAIN CONTENT
           ===================================================== */}
 
-      {curtainOpen && (
-        <>
+      <>
           {/* =================================================
               PAGE 1
 
@@ -829,8 +828,7 @@ export default function ImageSlider1() {
               </motion.div>
             </Suspense>
           )}
-        </>
-      )}
+      </>
     </Background>
   );
 }

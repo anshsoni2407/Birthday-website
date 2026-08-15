@@ -173,10 +173,10 @@ const CurtainIntro = memo(({ onOpen }) => {
   useEffect(() => {
     if (!isOpening) return;
 
-    // 300ms button fade + 1800ms curtain slide + 200ms buffer = ~2300ms
+    // Keep the curtain mounted for the full opening animation only.
     const timer = setTimeout(() => {
       onOpen();
-    }, 2300);
+    }, 1800);
 
     return () => clearTimeout(timer);
   }, [isOpening, onOpen]);
@@ -184,7 +184,7 @@ const CurtainIntro = memo(({ onOpen }) => {
   return (
     <div
       className="fixed inset-0 z-50 overflow-hidden"
-      style={{ backgroundColor: "#0a0a0a" }}
+      style={{ backgroundColor: isOpening ? "transparent" : "#0a0a0a" }}
     >
       {/* Inject all keyframes/styles once */}
       <style>{CURTAIN_STYLES}</style>
