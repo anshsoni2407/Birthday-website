@@ -37,8 +37,19 @@ const getGlowColor = (v) => {
 ────────────────────────────────────── */
 
 const EmojiForBlast = [
-  "💖", "💝", "🥰", "✨", "⭐", "🌟",
-  "💫", "🌸", "🌺", "💐", "🦋", "🎉", "🎊",
+  "💖",
+  "💝",
+  "🥰",
+  "✨",
+  "⭐",
+  "🌟",
+  "💫",
+  "🌸",
+  "🌺",
+  "💐",
+  "🦋",
+  "🎉",
+  "🎊",
 ];
 
 function generateBlastEmojis() {
@@ -46,7 +57,8 @@ function generateBlastEmojis() {
   const arr = [];
   const vh = window.innerHeight;
   for (let i = 0; i < total; i++) {
-    const char = EmojiForBlast[Math.floor(Math.random() * EmojiForBlast.length)];
+    const char =
+      EmojiForBlast[Math.floor(Math.random() * EmojiForBlast.length)];
     const fromLeft = Math.random() < 0.5;
     arr.push({
       id: i,
@@ -87,7 +99,10 @@ function EmojiBlast({ trigger }) {
   if (emojis.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9000]" style={{ contain: "layout style paint" }}>
+    <div
+      className="fixed inset-0 pointer-events-none z-[9000]"
+      style={{ contain: "layout style paint" }}
+    >
       {emojis.map((e) => (
         <motion.div
           key={e.id}
@@ -639,7 +654,7 @@ const CandleBlow = memo(() => {
         {stage === "blowing" && (
           <div className="flex items-center justify-center">
             <img
-              src="/bg/happy-birthday-23826_256.gif"
+              src="/bg/bday.gif"
               alt="Blowing candle"
               className="
                 w-72

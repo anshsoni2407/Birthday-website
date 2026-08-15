@@ -345,7 +345,7 @@ function DateLock({ onUnlock }) {
                 : {}
             }
           >
-            {isUnlocking ? "Unlocked! 💖" : "A Little Surprise"}
+            {isUnlocking ? "Unlocked! 💖" : "A Little Security"}
           </motion.h2>
 
           {/* Subtitle */}

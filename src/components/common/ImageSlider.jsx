@@ -8,75 +8,42 @@ import s5 from "../../assets/images/s5.jpeg";
 import s6 from "../../assets/images/s6.jpeg";
 import s7 from "../../assets/images/s7.jpeg";
 import s8 from "../../assets/images/s8.jpeg";
-import s11 from "../../assets/images/s11.jpeg";
-import s12 from "../../assets/images/s12.jpeg";
-import s13 from "../../assets/images/s13.jpeg";
-import s14 from "../../assets/images/s14.jpeg";
-import s15 from "../../assets/images/s15.jpeg";
-import s16 from "../../assets/images/s16.jpeg";
 
 /* ─────────────────────────────────────────────
    SLIDE DATA
 ───────────────────────────────────────────── */
 const slides = [
   {
-    img: s5,
-    text: "Your smile is the most beautiful thing my eyes could ever find 💖",
-  },
-  {
     img: s1,
-    text: "There is something about you that makes my heart fall for you a little more every day 💫❤️",
-  },
-  {
-    img: s3,
-    text: "You look beautiful in every color, but somehow, you make every color look beautiful too 💕",
-  },
-  {
-    img: s4,
-    text: "Your eyes have a way of making me forget everything around me ❤️",
+    text: "I don't know how you do it, but somehow you make me fall for you a little more every day ❤️",
   },
   {
     img: s2,
-    text: "You are the kind of beautiful that words will never be enough to describe 💞",
+    text: "You look beautiful in every color, but honestly, I think you make every color look better ❤️",
+  },
+  {
+    img: s3,
+    text: "I could look into your eyes for hours and still not get tired of them 🥹❤️",
+  },
+  {
+    img: s4,
+    text: "Sometimes I just look at you and wonder how I got so lucky to have you in my life ❤️",
+  },
+  {
+    img: s5,
+    text: "Being with you feels so easy and comfortable, like that's exactly where I'm supposed to be 🌸❤️",
   },
   {
     img: s6,
-    text: "Being around you feels like my favorite place in the whole world 🌸",
+    text: "No matter how many times I see you, you still somehow manage to take my breath away 🥰❤️",
   },
   {
     img: s7,
-    text: "If beauty had a name, I think it would sound a lot like yours ♾️❤️",
+    text: "If I could keep one view with me forever, I think I'd choose you without even thinking twice ❤️",
   },
   {
     img: s8,
-    text: "Every picture of you becomes my new favorite picture of you 🌍💖",
-  },
-  {
-    img: s11,
-    text: "If I had to choose one view to never get tired of, it would probably be you 💖",
-  },
-  {
-    img: s12,
-    text: "If I had to choose one view to never get tired of, it would probably be you 💖",
-  },
-
-  // New slides
-
-  {
-    img: s13,
-    text: "Some moments become special simply because you are the one in them 🌸💖",
-  },
-  {
-    img: s14,
-    text: "You have this effortless way of turning an ordinary moment into something unforgettable 💫",
-  },
-  {
-    img: s15,
-    text: "There is a warmth in your presence that makes everything around you feel a little brighter ☀️❤️",
-  },
-  {
-    img: s16,
-    text: "No matter how many pictures I see, somehow you still manage to surprise me with how beautiful you are 🥰",
+    text: "Every time I see your pictures, I somehow end up smiling like an idiot all over again ❤️",
   },
 ];
 

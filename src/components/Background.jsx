@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import bgPhone from "../assets/Anuj/bgPhone.png";
+import bgPhone from "../assets/bgPhone.png";
 
 /* ─────────────────────────────────────────────
    EMOJI DATA — background decorations

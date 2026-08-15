@@ -2,10 +2,14 @@ import React, { useState, useCallback, useEffect, memo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-import pa1 from "../../assets/Anuj/pa1.jpeg";
-import pa2 from "../../assets/Anuj/pa2.jpeg";
-import pa3 from "../../assets/Anuj/pa3.jpeg";
-import pa4 from "../../assets/Anuj/pa4.jpeg";
+import as1 from "../../assets/images/as1.jpeg";
+import as2 from "../../assets/images/as2.jpeg";
+import as3 from "../../assets/images/as3.jpeg";
+import as4 from "../../assets/images/as4.jpeg";
+import as5 from "../../assets/images/as5.jpeg";
+import as6 from "../../assets/images/as6.jpeg";
+import as7 from "../../assets/images/as7.jpeg";
+import as8 from "../../assets/images/as8.jpeg";
 
 /* ─────────────────────────────────────────────
    MEMORY DATA
@@ -13,42 +17,42 @@ import pa4 from "../../assets/Anuj/pa4.jpeg";
 
 const memories = [
   {
-    img: pa1,
+    img: as1,
     title: "The Beginning ❤️",
     text: "Beautiful memories always stay forever.",
   },
   {
-    img: pa2,
+    img: as2,
     title: "Countdown khatam… ⏳",
     text: "The excitement builds as we approach the day.",
   },
   {
-    img: pa3,
+    img: as3,
     title: "Music chal raha… 🎵",
     text: "Melodies that echo the love in the air.",
   },
   {
-    img: pa4,
+    img: as4,
     title: "Aur ye sirf shuruaat hai 💕",
     text: "The journey has just begun, stay tuned!",
   },
   {
-    img: pa3,
+    img: as5,
     title: "Music chal raha… 🎵",
     text: "Melodies that echo the love in the air.",
   },
   {
-    img: pa4,
+    img: as6,
     title: "Aur ye sirf shuruaat hai 💕",
     text: "The journey has just begun, stay tuned!",
   },
   {
-    img: pa3,
+    img: as7,
     title: "Music chal raha… 🎵",
     text: "Melodies that echo the love in the air.",
   },
   {
-    img: pa4,
+    img: as8,
     title: "Aur ye sirf shuruaat hai 💕",
     text: "The journey has just begun, stay tuned!",
     isLast: true,
