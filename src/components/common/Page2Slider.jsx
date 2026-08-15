@@ -19,11 +19,11 @@ import as8 from "../../assets/images/as8.jpeg";
 const memories = [
   {
     img: as1,
-    title: "Somehow, you became my favorite part of every day ❤️",
+    title: "She drives like a pro… at least in my heart 😂❤️",
   },
   {
     img: as2,
-    title: "I still get that little smile every time I look at you 🥹❤️",
+    title: "My favorite rider, even if I had to pretend to trust your driving 😂",
   },
   {
     img: as3,
