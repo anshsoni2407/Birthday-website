@@ -19,43 +19,39 @@ import as8 from "../../assets/images/as8.jpeg";
 const memories = [
   {
     img: as1,
-    title: "The Beginning ❤️",
-    text: "Beautiful memories always stay forever.",
+    title: "Somehow, you became my favorite part of every day ❤️",
   },
   {
     img: as2,
-    title: "Countdown khatam… ⏳",
-    text: "The excitement builds as we approach the day.",
+    title: "I still get that little smile every time I look at you 🥹❤️",
   },
   {
     img: as3,
-    title: "Music chal raha… 🎵",
-    text: "Melodies that echo the love in the air.",
+    title:
+      "With you, even the simplest moments feel a little more special 🎵💕",
   },
   {
     img: as4,
-    title: "Aur ye sirf shuruaat hai 💕",
-    text: "The journey has just begun, stay tuned!",
+    title: "I don't need perfect moments, I just need you in them ❤️",
   },
   {
     img: as5,
-    title: "Music chal raha… 🎵",
-    text: "Melodies that echo the love in the air.",
+    title: "You have no idea how happy you make me just by being yourself 🥰",
   },
   {
     img: as6,
-    title: "Aur ye sirf shuruaat hai 💕",
-    text: "The journey has just begun, stay tuned!",
+    title:
+      "If I could relive one moment again and again, I'd probably choose one with you ❤️",
   },
   {
     img: as7,
-    title: "Music chal raha… 🎵",
-    text: "Melodies that echo the love in the air.",
+    title:
+      "No matter how many memories we make, I'll always want one more with you 💕",
   },
   {
     img: as8,
-    title: "Aur ye sirf shuruaat hai 💕",
-    text: "The journey has just begun, stay tuned!",
+    title:
+      "And honestly, I hope this is just the beginning of our forever ❤️♾️",
     isLast: true,
   },
 ];
@@ -426,9 +422,9 @@ const Page2Slider = memo(({ showStory }) => {
 
       {createPortal(
         <AnimatePresence>
-        {selected && (
-          <motion.div
-            className="
+          {selected && (
+            <motion.div
+              className="
               fixed
               inset-0
               z-[100]
@@ -442,23 +438,23 @@ const Page2Slider = memo(({ showStory }) => {
               overflow-hidden
               cursor-pointer
             "
-            variants={overlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onClick={closeModal}
-          >
-            {/* ─────────────────────────────
+              variants={overlayVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={closeModal}
+            >
+              {/* ─────────────────────────────
                 CLOSE BUTTON
             ───────────────────────────── */}
 
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                closeModal();
-              }}
-              className="
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  closeModal();
+                }}
+                className="
                 absolute
                 top-5
                 right-5
@@ -482,22 +478,22 @@ const Page2Slider = memo(({ showStory }) => {
                 active:scale-95
                 transition-all
               "
-              aria-label="Close image preview"
-            >
-              ✕
-            </button>
+                aria-label="Close image preview"
+              >
+                ✕
+              </button>
 
-            {/* ─────────────────────────────
+              {/* ─────────────────────────────
                 PREVIOUS BUTTON
             ───────────────────────────── */}
 
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                previousMemory();
-              }}
-              className="
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  previousMemory();
+                }}
+                className="
                 absolute
                 left-3
                 sm:left-6
@@ -522,22 +518,22 @@ const Page2Slider = memo(({ showStory }) => {
                 active:scale-95
                 transition-all
               "
-              aria-label="Previous memory"
-            >
-              ←
-            </button>
+                aria-label="Previous memory"
+              >
+                ←
+              </button>
 
-            {/* ─────────────────────────────
+              {/* ─────────────────────────────
                 NEXT BUTTON
             ───────────────────────────── */}
 
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                nextMemory();
-              }}
-              className="
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  nextMemory();
+                }}
+                className="
                 absolute
                 right-3
                 sm:right-6
@@ -562,29 +558,29 @@ const Page2Slider = memo(({ showStory }) => {
                 active:scale-95
                 transition-all
               "
-              aria-label="Next memory"
-            >
-              →
-            </button>
+                aria-label="Next memory"
+              >
+                →
+              </button>
 
-            {/* ─────────────────────────────
+              {/* ─────────────────────────────
                 MEMORY CARD
             ───────────────────────────── */}
 
-            <motion.div
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              onClick={(event) => event.stopPropagation()}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              className="w-full max-w-[390px] flex justify-center"
-            >
-              {/* TILTING MEMORY CARD */}
-              <div
-                className="
+              <motion.div
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                onClick={(event) => event.stopPropagation()}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                className="w-full max-w-[390px] flex justify-center"
+              >
+                {/* TILTING MEMORY CARD */}
+                <div
+                  className="
       relative
       w-full
       max-h-[88vh]
@@ -599,10 +595,10 @@ const Page2Slider = memo(({ showStory }) => {
       flex-col
       animate-[modalTilt_4s_ease-in-out_infinite]
     "
-              >
-                {/* IMAGE */}
-                <div
-                  className="
+                >
+                  {/* IMAGE */}
+                  <div
+                    className="
         relative
         w-full
         h-[55vh]
@@ -615,13 +611,13 @@ const Page2Slider = memo(({ showStory }) => {
         items-center
         justify-center
       "
-                >
-                  {/* Loading shimmer */}
-                  {!imageLoaded && (
-                    <div className="absolute inset-0 overflow-hidden bg-[#e8e0cd]">
-                      <div className="absolute inset-0 shimmer-preview" />
+                  >
+                    {/* Loading shimmer */}
+                    {!imageLoaded && (
+                      <div className="absolute inset-0 overflow-hidden bg-[#e8e0cd]">
+                        <div className="absolute inset-0 shimmer-preview" />
 
-                      <style>{`
+                        <style>{`
             @keyframes preview-shimmer {
               0% {
                 transform: translateX(-100%);
@@ -644,18 +640,18 @@ const Page2Slider = memo(({ showStory }) => {
               animation: preview-shimmer 1.4s infinite;
             }
           `}</style>
-                    </div>
-                  )}
+                      </div>
+                    )}
 
-                  {/* IMAGE */}
-                  <img
-                    key={selected.img}
-                    src={selected.img}
-                    alt={selected.title}
-                    decoding="async"
-                    onLoad={() => setImageLoaded(true)}
-                    draggable={false}
-                    className="
+                    {/* IMAGE */}
+                    <img
+                      key={selected.img}
+                      src={selected.img}
+                      alt={selected.title}
+                      decoding="async"
+                      onLoad={() => setImageLoaded(true)}
+                      draggable={false}
+                      className="
           w-full
           h-full
           object-contain
@@ -663,52 +659,40 @@ const Page2Slider = memo(({ showStory }) => {
           transition-opacity
           duration-300
         "
-                    style={{
-                      opacity: imageLoaded ? 1 : 0,
-                    }}
-                  />
-                </div>
+                      style={{
+                        opacity: imageLoaded ? 1 : 0,
+                      }}
+                    />
+                  </div>
 
-                {/* TITLE */}
-                <div className="text-center px-3 pt-4">
-                  <h2
-                    className="
+                  {/* TITLE */}
+                  <div className="text-center px-3 pt-4">
+                    <h2
+                      className="
           text-[#5c4a68]
           text-[18px]
           sm:text-[20px]
           font-semibold
           leading-tight
         "
-                  >
-                    {selected.title}
-                  </h2>
-                </div>
+                    >
+                      {selected.title}
+                    </h2>
+                  </div>
 
-                {/* DESCRIPTION */}
-                <div
-                  className="
+                  {/* DESCRIPTION */}
+                  <div
+                    className="
         text-center
         px-4
         pt-2
         pb-1
       "
-                >
-                  <p
-                    className="
-          text-[#6b5876]
-          text-[14px]
-          sm:text-[15px]
-          italic
-          leading-relaxed
-        "
-                  >
-                    {selected.text}
-                  </p>
+                  ></div>
                 </div>
-              </div>
 
-              {/* TILT ANIMATION */}
-              <style>{`
+                {/* TILT ANIMATION */}
+                <style>{`
     @keyframes modalTilt {
       0%,
       100% {
@@ -726,13 +710,13 @@ const Page2Slider = memo(({ showStory }) => {
       }
     }
   `}</style>
-            </motion.div>
-            {/* ─────────────────────────────
+              </motion.div>
+              {/* ─────────────────────────────
                 DOTS
             ───────────────────────────── */}
 
-            <div
-              className="
+              <div
+                className="
                 absolute
                 bottom-5
                 left-1/2
@@ -741,17 +725,17 @@ const Page2Slider = memo(({ showStory }) => {
                 items-center
                 gap-[7px]
               "
-            >
-              {memories.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setSelectedIndex(index);
-                    setImageLoaded(false);
-                  }}
-                  className={`
+              >
+                {memories.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setSelectedIndex(index);
+                      setImageLoaded(false);
+                    }}
+                    className={`
                     h-[7px]
                     rounded-full
                     transition-all
@@ -762,23 +746,23 @@ const Page2Slider = memo(({ showStory }) => {
                         : "w-[7px] bg-white/30 hover:bg-white/50"
                     }
                   `}
-                  aria-label={`View memory ${index + 1}`}
-                />
-              ))}
-            </div>
+                    aria-label={`View memory ${index + 1}`}
+                  />
+                ))}
+              </div>
 
-            {/* ─────────────────────────────
+              {/* ─────────────────────────────
                 CAKE BUTTON
             ───────────────────────────── */}
 
-            {selected.isLast && (
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  goToCakeFromModal();
-                }}
-                className="
+              {selected.isLast && (
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    goToCakeFromModal();
+                  }}
+                  className="
                   absolute
                   bottom-14
                   left-1/2
@@ -794,12 +778,12 @@ const Page2Slider = memo(({ showStory }) => {
                   active:scale-95
                   transition-all
                 "
-              >
-                🎂 It's time to cut the cake
-              </button>
-            )}
-          </motion.div>
-        )}
+                >
+                  🎂 It's time to cut the cake
+                </button>
+              )}
+            </motion.div>
+          )}
         </AnimatePresence>,
         document.body,
       )}
