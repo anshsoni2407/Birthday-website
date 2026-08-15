@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, memo, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -283,7 +284,7 @@ const Page2Slider = memo(({ showStory }) => {
   return (
     <div
       className={`
-    ${showStory ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+    ${showStory ? "opacity-100" : "opacity-0 scale-95"}
     relative
     my-10
     mx-auto
@@ -423,7 +424,8 @@ const Page2Slider = memo(({ showStory }) => {
           FULLSCREEN MEMORY PREVIEW
       ═════════════════════════════════════ */}
 
-      <AnimatePresence>
+      {createPortal(
+        <AnimatePresence>
         {selected && (
           <motion.div
             className="
@@ -798,7 +800,9 @@ const Page2Slider = memo(({ showStory }) => {
             )}
           </motion.div>
         )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   );
 });
