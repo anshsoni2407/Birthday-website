@@ -133,7 +133,7 @@ function EmojiBlast({ trigger }) {
 ────────────────────────────────────── */
 
 const CandleBlow = memo(() => {
-  const { pauseMusic } = useMusic();
+  const { setMusicVolume } = useMusic();
 
   const [stage, setStage] = useState("before");
   const [listening, setListening] = useState(false);
@@ -191,7 +191,10 @@ const CandleBlow = memo(() => {
     dataArrayRef.current = null;
 
     startingMicRef.current = false;
-  }, []);
+
+    // Mic is no longer active, so restore the background music level.
+    setMusicVolume(1);
+  }, [setMusicVolume]);
 
   /* ──────────────────────────────────────
      RESET EVERYTHING
@@ -348,6 +351,8 @@ const CandleBlow = memo(() => {
 
       source.connect(analyser);
 
+      // Keep music playing, but duck it while the microphone is listening.
+      setMusicVolume(0.2);
       setListening(true);
 
       startingMicRef.current = false;
@@ -366,7 +371,7 @@ const CandleBlow = memo(() => {
 
       alert("Microphone permission denied ❌");
     }
-  }, [listening, stage, stopMicrophone, detectBlow]);
+  }, [listening, stage, stopMicrophone, detectBlow, setMusicVolume]);
 
   /* ──────────────────────────────────────
      GO TO ENVELOPE
@@ -388,9 +393,8 @@ const CandleBlow = memo(() => {
     setListening(false);
     setMicStrength(0);
 
-    /* Auto-pause background music when entering cake section */
-    pauseMusic();
-  }, [pauseMusic]);
+    // Music stays playing on this screen; it is reduced only while the mic listens.
+  }, []);
 
   /* ──────────────────────────────────────
      COMPLETE CLEANUP
@@ -433,8 +437,9 @@ const CandleBlow = memo(() => {
       audioContextRef.current = null;
       analyserRef.current = null;
       dataArrayRef.current = null;
+      setMusicVolume(1);
     };
-  }, []);
+  }, [setMusicVolume]);
 
   /* ──────────────────────────────────────
      UI

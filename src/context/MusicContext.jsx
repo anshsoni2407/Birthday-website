@@ -20,6 +20,13 @@ export function MusicProvider({ children }) {
     setIsPlaying(false);
   }, []);
 
+  const setMusicVolume = useCallback((volume) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = Math.max(0, Math.min(1, volume));
+  }, []);
+
   const toggleMusic = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -32,7 +39,9 @@ export function MusicProvider({ children }) {
   }, []);
 
   return (
-    <MusicContext.Provider value={{ playMusic, pauseMusic, toggleMusic, isPlaying }}>
+    <MusicContext.Provider
+      value={{ playMusic, pauseMusic, toggleMusic, setMusicVolume, isPlaying }}
+    >
       {/* Single global audio element – never duplicated */}
       <audio ref={audioRef} src={musicFile} loop preload="auto" />
       {children}
