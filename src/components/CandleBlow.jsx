@@ -228,7 +228,35 @@ const CandleBlow = memo(() => {
   /* ──────────────────────────────────────
      DETECT BLOW
   ────────────────────────────────────── */
+const triggerBlow = useCallback(() => {
+  if (blownRef.current) return;
 
+  blownRef.current = true;
+
+  // Stop microphone if it is running
+  stopMicrophone();
+
+  setListening(false);
+  setMicStrength(0);
+
+  // Show blowing animation
+  setStage("blowing");
+
+  // Trigger emoji celebration
+  setBlastTrigger((prev) => !prev);
+
+  // Move to after state
+  if (stageTimeoutRef.current) {
+    clearTimeout(stageTimeoutRef.current);
+  }
+
+  stageTimeoutRef.current = setTimeout(() => {
+    setStage("after");
+    stageTimeoutRef.current = null;
+  }, 2500);
+}, [stopMicrophone]);
+  
+  
   const detectBlow = useCallback(() => {
     if (!analyserRef.current || !dataArrayRef.current || blownRef.current) {
       return;
@@ -249,41 +277,13 @@ const CandleBlow = memo(() => {
     ───────────────────────────── */
 
     if (strength >= 30) {
-      if (blownRef.current) {
-        return;
-      }
-
-      blownRef.current = true;
-
-      /* Stop microphone immediately */
-
-      stopMicrophone();
-
-      setListening(false);
-      setMicStrength(0);
-      setStage("blowing");
-      setBlastTrigger(true);
-
-      /* Clear any previous timer */
-
-      if (stageTimeoutRef.current) {
-        clearTimeout(stageTimeoutRef.current);
-      }
-
-      /* After GIF/animation */
-
-      stageTimeoutRef.current = setTimeout(() => {
-        setStage("after");
-        stageTimeoutRef.current = null;
-      }, 2500);
-
+      triggerBlow();
       return;
     }
-
     /* Continue monitoring */
 
     animationRef.current = requestAnimationFrame(detectBlow);
-  }, [stopMicrophone]);
+  }, [stopMicrophone, triggerBlow]);
 
   /* ──────────────────────────────────────
      START MICROPHONE
@@ -476,7 +476,7 @@ const CandleBlow = memo(() => {
             animate-pulse
           "
         >
-          🎉 Happy Birthday Baby  🎉
+          🎉 Happy Birthday Baby 🎉
         </h1>
 
         {/* ═══════════════════════════
@@ -523,6 +523,30 @@ const CandleBlow = memo(() => {
               "
             >
               {listening ? "Blow the Candle 💨" : "Start Mic 🎤"}
+            </button>
+            <button
+              onClick={triggerBlow}
+              disabled={stage !== "before"}
+              className="
+    mt-4
+    px-8
+    py-3
+    rounded-full
+    bg-gradient-to-r
+    from-pink-500
+    to-rose-500
+    hover:from-pink-600
+    hover:to-rose-600
+    active:scale-95
+    transition-all
+    shadow-[0_10px_30px_rgba(236,72,153,0.35)]
+    text-lg
+    font-semibold
+    disabled:opacity-50
+    disabled:cursor-not-allowed
+  "
+            >
+              Blow For Me 💨
             </button>
 
             {/* INSTRUCTION */}
