@@ -248,7 +248,7 @@ const CandleBlow = memo(() => {
        BLOW DETECTED
     ───────────────────────────── */
 
-    if (strength >= 70) {
+    if (strength >= 30) {
       if (blownRef.current) {
         return;
       }
@@ -628,7 +628,7 @@ const CandleBlow = memo(() => {
                         text-white/80
                       "
                     >
-                      70
+                      30
                     </span>
                   </div>
                 </div>
@@ -643,7 +643,7 @@ const CandleBlow = memo(() => {
                 >
                   {micStrength < 20
                     ? "Blow harder…"
-                    : micStrength < 70
+                    : micStrength < 30
                       ? "Almost there — keep going!"
                       : "🔥 Full power!"}
                 </p>
