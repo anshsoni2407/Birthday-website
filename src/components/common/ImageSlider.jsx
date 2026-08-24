@@ -210,7 +210,7 @@ const ImageSlider = memo(() => {
   const isLoaded = loadedImages.has(index);
 
   return (
-    <div className="relative w-full max-w-[430px] mx-auto px-4 pb-8">
+    <div className="relative w-full max-w-[430px] mt-6 mx-auto px-4 pb-8">
       {/* ─────────────────────────────────────
           SLIDER AREA
       ───────────────────────────────────── */}

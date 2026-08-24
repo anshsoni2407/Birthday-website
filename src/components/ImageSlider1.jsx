@@ -596,7 +596,7 @@ export default function ImageSlider1() {
      ========================================================= */
 
   useEffect(() => {
-    const target = new Date("2026-01-26T00:00:00").getTime();
+    const target = new Date("2026-08-25T00:00:00").getTime();
 
     const timer = setInterval(() => {
       const diff = target - Date.now();
@@ -734,100 +734,94 @@ export default function ImageSlider1() {
           ===================================================== */}
 
       <>
-          {/* =================================================
+        {/* =================================================
               PAGE 1
 
               IMPORTANT:
               Hide Page 1 while DateLock is open.
               ================================================= */}
 
-          {page === 1 && !showDateLock && (
-            <motion.div
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              className="min-h-screen flex flex-col items-center justify-center px-4 py-3 text-center"
-            >
-              <ImageSlider />
+        {page === 1 && !showDateLock && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            className="min-h-screen flex flex-col items-center justify-center px-4 py-3 text-center"
+          >
+            <h1 className="mb-2 font-serif text-5xl font-bold italic">
+              Simran❤️
+            </h1>
+            <p className="mb-6 opacity-90">Something special is coming…</p>
+            <div className="flex flex-wrap justify-center gap-4">
+              {countdownTiles}
+            </div>
+            {showBtn && (
+              <motion.button
+                type="button"
+                onClick={goToPage2}
+                whileHover={{
+                  scale: 1.04,
+                }}
+                whileTap={{
+                  scale: 0.96,
+                }}
+                className="mt-8 rounded-full bg-white px-10 py-4 font-semibold text-pink-600 shadow-lg"
+              >
+                Go to Next Page 💖
+              </motion.button>
+            )}{" "}
+            <ImageSlider />
+          </motion.div>
+        )}
 
-              <h1 className="mb-2 font-serif text-5xl font-bold italic">
-                Simran❤️
-              </h1>
-
-              <p className="mb-6 opacity-90">Something special is coming…</p>
-
-              <div className="flex flex-wrap justify-center gap-4">
-                {countdownTiles}
-              </div>
-
-              {showBtn && (
-                <motion.button
-                  type="button"
-                  onClick={goToPage2}
-                  whileHover={{
-                    scale: 1.04,
-                  }}
-                  whileTap={{
-                    scale: 0.96,
-                  }}
-                  className="mt-8 rounded-full bg-white px-10 py-4 font-semibold text-pink-600 shadow-lg"
-                >
-                  Go to Next Page 💖
-                </motion.button>
-              )}
-            </motion.div>
-          )}
-
-          {/* =================================================
+        {/* =================================================
               DATE LOCK
 
               page remains 1.
               Page2Slider is NOT rendered.
               ================================================= */}
 
-          <AnimatePresence>
-            {page === 1 && showDateLock && (
-              <DateLock onUnlock={handleDateUnlock} />
-            )}
-          </AnimatePresence>
+        <AnimatePresence>
+          {page === 1 && showDateLock && (
+            <DateLock onUnlock={handleDateUnlock} />
+          )}
+        </AnimatePresence>
 
-          {/* =================================================
+        {/* =================================================
               PAGE 2
 
               ONLY rendered after successful date verification.
               ================================================= */}
 
-          {page === 2 && (
-            <Suspense
-              fallback={
-                <div className="min-h-screen flex items-center justify-center">
-                  <div className="text-xl text-white animate-pulse">
-                    Loading…
-                  </div>
-                </div>
-              }
+        {page === 2 && (
+          <Suspense
+            fallback={
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="text-xl text-white animate-pulse">Loading…</div>
+              </div>
+            }
+          >
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.5,
+              }}
+              className="min-h-screen flex items-center justify-center px-4"
             >
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                transition={{
-                  duration: 0.5,
-                }}
-                className="min-h-screen flex items-center justify-center px-4"
-              >
-                <Page2Slider showStory={showStory} />
-              </motion.div>
-            </Suspense>
-          )}
+              <Page2Slider showStory={showStory} />
+            </motion.div>
+          </Suspense>
+        )}
       </>
     </Background>
   );
