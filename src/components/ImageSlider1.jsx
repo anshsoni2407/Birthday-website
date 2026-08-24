@@ -596,7 +596,7 @@ export default function ImageSlider1() {
      ========================================================= */
 
   useEffect(() => {
-    const target = new Date("2026-08-24T20:57:00").getTime();
+    const target = new Date("2026-08-24T23:50:00").getTime();
 
     const timer = setInterval(() => {
       const diff = target - Date.now();
